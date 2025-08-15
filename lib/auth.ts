@@ -1,11 +1,15 @@
-import { auth } from "@clerk/nextjs/server"
+import { auth, currentUser } from "@clerk/nextjs/server"
 
 export async function isAdmin() {
   const { userId } = await auth()
   if (!userId) return false
 
-  // Check if user email matches admin email
-  return process.env.ADMIN_EMAIL === "sahilniraula00@gmail.com"
+  const user = await currentUser()
+  if (!user) return false
+
+  // Check if user email matches admin email from env
+  const email = user.emailAddresses[0]?.emailAddress
+  return email === process.env.ADMIN_EMAIL
 }
 
 export async function requireAuth() {

@@ -1,82 +1,128 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { ObjectId } from "mongodb"
-import { getDatabase } from "@/lib/mongodb"
+import { NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
+import clientPromise from "@/lib/mongodb";
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+async function getId(context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
+  return id;
+}
+
+// GET a single package by ID
+export async function GET(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const id = await getId(context);
+
   try {
-    const { id } = await params
+    const client = await clientPromise;
+    const db = client.db("afisales");
 
-    if (!ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "Invalid package ID" }, { status: 400 })
-    }
-
-    const db = await getDatabase()
-    const packageData = await db.collection("packages").findOne({ _id: new ObjectId(id) })
+    const packageData = await db
+      .collection("packages")
+      .findOne({ _id: new ObjectId(id) });
 
     if (!packageData) {
-      return NextResponse.json({ error: "Package not found" }, { status: 404 })
+      return NextResponse.json({ error: "Package not found" }, { status: 404 });
     }
 
-    // Convert ObjectId to string for JSON serialization
-    const responseData = {
-      ...packageData,
-      _id: packageData._id.toString(),
-    }
-
-    return NextResponse.json(responseData)
+    return NextResponse.json(packageData, { status: 200 });
   } catch (error) {
-    console.error("Error fetching package:", error)
-    return NextResponse.json({ error: "Failed to fetch package" }, { status: 500 })
+    console.error("Error fetching package:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch package" },
+      { status: 500 }
+    );
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+// UPDATE package by ID
+export async function PUT(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const id = await getId(context);
+
   try {
-    const { id } = await params
-    const body = await request.json()
+    const body = await request.json();
+    const { categoryId, ...rest } = body;
 
-    if (!ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "Invalid package ID" }, { status: 400 })
+    const client = await clientPromise;
+    const db = client.db("afisales");
+
+    let categoryName = "";
+
+    if (categoryId) {
+      const category = await db
+        .collection("packageCategories")
+        .findOne({ _id: new ObjectId(categoryId) });
+
+      if (!category) {
+        return NextResponse.json(
+          { error: "Category not found" },
+          { status: 404 }
+        );
+      }
+
+      categoryName = category.name || "";
     }
-
-    const db = await getDatabase()
 
     const updateData = {
-      ...body,
+      ...rest,
+      ...(categoryId && { categoryId }),
+      ...(categoryName && { categoryName }),
       updatedAt: new Date(),
-    }
+    };
 
-    const result = await db.collection("packages").updateOne({ _id: new ObjectId(id) }, { $set: updateData })
+    const result = await db
+      .collection("packages")
+      .updateOne({ _id: new ObjectId(id) }, { $set: updateData });
 
     if (result.matchedCount === 0) {
-      return NextResponse.json({ error: "Package not found" }, { status: 404 })
+      return NextResponse.json({ error: "Package not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ _id: id, ...updateData })
+    return NextResponse.json(
+      { message: "Package updated successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error updating package:", error)
-    return NextResponse.json({ error: "Failed to update package" }, { status: 500 })
+    console.error("Error updating package:", error);
+    return NextResponse.json(
+      { error: "Failed to update package" },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+// DELETE package by ID
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const id = await getId(context);
+
   try {
-    const { id } = await params
+    const client = await clientPromise;
+    const db = client.db("afisales");
 
-    if (!ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "Invalid package ID" }, { status: 400 })
-    }
-
-    const db = await getDatabase()
-    const result = await db.collection("packages").deleteOne({ _id: new ObjectId(id) })
+    const result = await db
+      .collection("packages")
+      .deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount === 0) {
-      return NextResponse.json({ error: "Package not found" }, { status: 404 })
+      return NextResponse.json({ error: "Package not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Package deleted successfully" })
+    return NextResponse.json(
+      { message: "Package deleted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("Error deleting package:", error)
-    return NextResponse.json({ error: "Failed to delete package" }, { status: 500 })
+    console.error("Error deleting package:", error);
+    return NextResponse.json(
+      { error: "Failed to delete package" },
+      { status: 500 }
+    );
   }
 }

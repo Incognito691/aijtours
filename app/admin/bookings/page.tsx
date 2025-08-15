@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useUser } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,94 +22,102 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { useToast } from "@/hooks/use-toast"
-import { Trash2, Calendar, MapPin, Users, Mail, Phone } from "lucide-react"
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
+import { Trash2, Calendar, MapPin, Users, Mail, Phone } from "lucide-react";
 
 interface Booking {
-  _id: string
-  userId: string
-  userEmail: string
-  userName: string
-  packageId?: string
-  eventId?: string
-  type: "package" | "event"
+  _id: string;
+  userId: string;
+  userEmail: string;
+  userName: string;
+  packageId?: string;
+  eventId?: string;
+  type: "package" | "event";
   bookingDetails: {
-    travelers: number
-    travelDate: string
-    contactNumber: string
-    specialRequests?: string
-  }
-  totalAmount: number
-  status: string
-  createdAt: string
-  packageName?: string
-  eventName?: string
-  destination?: string
-  location?: string
+    travelers: number;
+    travelDate: string;
+    contactNumber: string;
+    specialRequests?: string;
+  };
+  totalAmount: number;
+  status: string;
+  createdAt: string;
+  packageName?: string;
+  eventName?: string;
+  destination?: string;
+  location?: string;
 }
 
 export default function AdminBookingsPage() {
-  const { user } = useUser()
-  const router = useRouter()
-  const { toast } = useToast()
-  const [bookings, setBookings] = useState<Booking[]>([])
-  const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState<string | null>(null)
+  const { user } = useUser();
+  const router = useRouter();
+  const { toast } = useToast();
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user?.emailAddresses[0]?.emailAddress !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-      router.push("/")
-      return
+    if (
+      user?.emailAddresses[0]?.emailAddress !==
+      process.env.NEXT_PUBLIC_ADMIN_EMAIL
+    ) {
+      router.push("/");
+      return;
     }
 
     const fetchBookings = async () => {
       try {
-        const response = await fetch("/api/bookings")
+        const response = await fetch("/api/bookings");
         if (response.ok) {
-          const data = await response.json()
-          setBookings(data)
+          const data = await response.json();
+          setBookings(data);
         }
       } catch (error) {
-        console.error("Error fetching bookings:", error)
+        console.error("Error fetching bookings:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchBookings()
-  }, [user, router])
+    fetchBookings();
+  }, [user, router]);
 
   const handleDelete = async (bookingId: string) => {
-    setDeleting(bookingId)
+    setDeleting(bookingId);
     try {
-      const response = await fetch(`/api/bookings/${bookingId}`, {
+      const response = await fetch(`/api/bookings/AED {bookingId}`, {
         method: "DELETE",
-      })
+      });
 
       if (response.ok) {
-        setBookings((prev) => prev.filter((booking) => booking._id !== bookingId))
+        setBookings((prev) =>
+          prev.filter((booking) => booking._id !== bookingId)
+        );
         toast({
           title: "Booking deleted",
           description: "The booking has been successfully deleted.",
-        })
+        });
       } else {
-        throw new Error("Failed to delete booking")
+        throw new Error("Failed to delete booking");
       }
     } catch (error) {
-      console.error("Error deleting booking:", error)
+      console.error("Error deleting booking:", error);
       toast({
         title: "Error",
         description: "Failed to delete booking. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setDeleting(null)
+      setDeleting(null);
     }
-  }
+  };
 
-  if (user?.emailAddresses[0]?.emailAddress !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-    return null
+  if (
+    user?.emailAddresses[0]?.emailAddress !==
+    process.env.NEXT_PUBLIC_ADMIN_EMAIL
+  ) {
+    return null;
   }
 
   if (loading) {
@@ -120,42 +134,62 @@ export default function AdminBookingsPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Bookings Management</h1>
-          <p className="text-gray-600 mt-2">View and manage all customer bookings</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Bookings Management
+          </h1>
+          <p className="text-gray-600 mt-2">
+            View and manage all customer bookings
+          </p>
         </div>
 
         {bookings.length === 0 ? (
           <Card>
             <CardContent className="text-center py-12">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No bookings yet</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                No bookings yet
+              </h3>
               <p className="text-gray-600">
-                Customer bookings will appear here once they start booking packages and events.
+                Customer bookings will appear here once they start booking
+                packages and events.
               </p>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {bookings.map((booking) => (
-              <Card key={booking._id} className="hover:shadow-lg transition-shadow duration-200">
+              <Card
+                key={booking._id}
+                className="hover:shadow-lg transition-shadow duration-200"
+              >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-lg">
-                        {booking.type === "package" ? booking.packageName : booking.eventName}
+                        {booking.type === "package"
+                          ? booking.packageName
+                          : booking.eventName}
                       </CardTitle>
                       <CardDescription className="flex items-center mt-1">
                         <MapPin className="h-4 w-4 mr-1" />
-                        {booking.type === "package" ? booking.destination : booking.location}
+                        {booking.type === "package"
+                          ? booking.destination
+                          : booking.location}
                       </CardDescription>
                     </div>
-                    <Badge variant={booking.status === "confirmed" ? "default" : "secondary"}>{booking.status}</Badge>
+                    <Badge
+                      variant={
+                        booking.status === "confirmed" ? "default" : "secondary"
+                      }
+                    >
+                      {booking.status}
+                    </Badge>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -183,7 +217,9 @@ export default function AdminBookingsPage() {
                         Travel Date:
                       </span>
                       <span className="font-medium">
-                        {new Date(booking.bookingDetails.travelDate).toLocaleDateString()}
+                        {new Date(
+                          booking.bookingDetails.travelDate
+                        ).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
@@ -191,26 +227,35 @@ export default function AdminBookingsPage() {
                         <Users className="h-4 w-4 mr-1" />
                         Travelers:
                       </span>
-                      <span className="font-medium">{booking.bookingDetails.travelers}</span>
+                      <span className="font-medium">
+                        {booking.bookingDetails.travelers}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">Total Amount:</span>
-                      <span className="font-bold text-lg text-green-600">${booking.totalAmount}</span>
+                      <span className="font-bold text-lg text-green-600">
+                        AED {booking.totalAmount}
+                      </span>
                     </div>
                   </div>
 
                   {/* Special Requests */}
                   {booking.bookingDetails.specialRequests && (
                     <div className="border-t pt-3">
-                      <p className="text-sm text-gray-600 mb-1">Special Requests:</p>
-                      <p className="text-sm bg-gray-50 p-2 rounded">{booking.bookingDetails.specialRequests}</p>
+                      <p className="text-sm text-gray-600 mb-1">
+                        Special Requests:
+                      </p>
+                      <p className="text-sm bg-gray-50 p-2 rounded">
+                        {booking.bookingDetails.specialRequests}
+                      </p>
                     </div>
                   )}
 
                   {/* Booking Date */}
                   <div className="border-t pt-3">
                     <p className="text-xs text-gray-500">
-                      Booked on: {new Date(booking.createdAt).toLocaleDateString()} at{" "}
+                      Booked on:{" "}
+                      {new Date(booking.createdAt).toLocaleDateString()} at{" "}
                       {new Date(booking.createdAt).toLocaleTimeString()}
                     </p>
                   </div>
@@ -219,16 +264,24 @@ export default function AdminBookingsPage() {
                   <div className="border-t pt-3">
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="destructive" size="sm" className="w-full" disabled={deleting === booking._id}>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="w-full"
+                          disabled={deleting === booking._id}
+                        >
                           <Trash2 className="h-4 w-4 mr-2" />
-                          {deleting === booking._id ? "Deleting..." : "Delete Booking"}
+                          {deleting === booking._id
+                            ? "Deleting..."
+                            : "Delete Booking"}
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>Delete Booking</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Are you sure you want to delete this booking? This action cannot be undone.
+                            Are you sure you want to delete this booking? This
+                            action cannot be undone.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -250,5 +303,5 @@ export default function AdminBookingsPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -51,7 +51,7 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Destinations", href: "/destinations" },
-    { name: "Events", href: "/events" },
+    { name: "UAE Activities", href: "/events" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -78,7 +78,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center space-x-2">
             <Plane className="h-8 w-8 text-blue-600" />
             <span className="text-2xl font-bold text-gray-900">
-              AIJ Holidays
+              AFI Travel and Tourism
             </span>
           </Link>
 

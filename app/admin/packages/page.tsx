@@ -1,18 +1,24 @@
-"use client"
+"use client";
 
-import { useUser } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import Image from "next/image"
-import Navbar from "@/components/navbar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { useToast } from "@/hooks/use-toast"
-import type { Package } from "@/lib/models"
-import { Plus, Edit, Trash2, ArrowLeft, MapPin, Calendar } from "lucide-react"
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import Navbar from "@/components/navbar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import type { Package } from "@/lib/models";
+import { Plus, Edit, Trash2, ArrowLeft } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,76 +29,90 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 export default function AdminPackagesPage() {
-  const { user, isLoaded } = useUser()
-  const router = useRouter()
-  const { toast } = useToast()
-  const [packages, setPackages] = useState<Package[]>([])
-  const [loading, setLoading] = useState(true)
+  const { user, isLoaded } = useUser();
+  const router = useRouter();
+  const { toast } = useToast();
+  const [packages, setPackages] = useState<Package[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  // Redirect non-admins
   useEffect(() => {
-    if (isLoaded && (!user || user.emailAddresses[0]?.emailAddress !== "sahilniraula00@gmail.com")) {
-      router.push("/")
+    if (
+      isLoaded &&
+      (!user ||
+        user.emailAddresses[0]?.emailAddress !==
+          process.env.NEXT_PUBLIC_ADMIN_EMAIL)
+    ) {
+      router.push("/");
     }
-  }, [user, isLoaded, router])
+  }, [user, isLoaded, router]);
 
+  // Fetch packages
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await fetch("/api/packages")
+        const response = await fetch("/api/packages");
         if (response.ok) {
-          const data = await response.json()
-          setPackages(data)
+          const data = await response.json();
+          setPackages(data);
         }
       } catch (error) {
-        console.error("Error fetching packages:", error)
+        console.error("Error fetching packages:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    if (user?.emailAddresses[0]?.emailAddress === "sahilniraula00@gmail.com") {
-      fetchPackages()
+    if (
+      user?.emailAddresses[0]?.emailAddress ===
+      process.env.NEXT_PUBLIC_ADMIN_EMAIL
+    ) {
+      fetchPackages();
     }
-  }, [user])
+  }, [user]);
 
+  // Delete handler
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/packages/${id}`, {
+      const response = await fetch(`/api/packages/AED {id}`, {
         method: "DELETE",
-      })
+      });
 
       if (response.ok) {
-        setPackages(packages.filter((pkg) => pkg._id !== id))
+        setPackages(packages.filter((pkg) => pkg._id?.toString() !== id));
         toast({
           title: "Package deleted",
           description: "The package has been successfully deleted.",
-        })
+        });
       } else {
-        throw new Error("Failed to delete package")
+        throw new Error("Failed to delete package");
       }
     } catch (error) {
-      console.error("Error deleting package:", error)
+      console.error("Error deleting package:", error);
       toast({
         title: "Error",
         description: "Failed to delete package. Please try again.",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
-    )
+    );
   }
 
-  if (!user || user.emailAddresses[0]?.emailAddress !== "sahilniraula00@gmail.com") {
-    return null
+  if (
+    !user ||
+    user.emailAddresses[0]?.emailAddress !== process.env.NEXT_PUBLIC_ADMIN_EMAIL
+  ) {
+    return null;
   }
 
   return (
@@ -102,7 +122,10 @@ export default function AdminPackagesPage() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <Link href="/admin" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-2">
+            <Link
+              href="/admin"
+              className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-2"
+            >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Admin Dashboard
             </Link>
@@ -119,13 +142,15 @@ export default function AdminPackagesPage() {
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="bg-white rounded-lg shadow-md animate-pulse"
+              >
                 <div className="h-48 bg-gray-300 rounded-t-lg"></div>
                 <div className="p-6">
                   <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-300 rounded w-2/3 mb-4"></div>
-                  <div className="h-10 bg-gray-300 rounded"></div>
+                  <div className="h-4 bg-gray-300 rounded w-2/3"></div>
                 </div>
               </div>
             ))}
@@ -134,7 +159,7 @@ export default function AdminPackagesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {packages.map((pkg, index) => (
               <motion.div
-                key={pkg._id}
+                key={pkg._id?.toString() ?? index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -142,54 +167,32 @@ export default function AdminPackagesPage() {
                 <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="relative h-48">
                     <Image
-                      src={pkg.images[0] || "/placeholder.svg?height=200&width=400&query=travel destination"}
+                      src={
+                        pkg.images[0] ||
+                        "/placeholder.svg?height=200&width=400&query=travel package"
+                      }
                       alt={pkg.name}
                       fill
                       className="object-cover"
                     />
-                    <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                      {pkg.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          className={
-                            tag === "Featured"
-                              ? "bg-yellow-500 text-black"
-                              : tag === "Limited Offer"
-                                ? "bg-red-500 text-white"
-                                : "bg-blue-500 text-white"
-                          }
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
                   </div>
                   <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span className="line-clamp-1">{pkg.name}</span>
-                      <span className="text-blue-600 font-bold">${pkg.price}</span>
-                    </CardTitle>
-                    <CardDescription className="flex items-center space-x-4 text-sm">
-                      <span className="flex items-center">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {pkg.destination}
-                      </span>
-                      <span className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        {pkg.duration}
-                      </span>
+                    <CardTitle>{pkg.name}</CardTitle>
+                    <CardDescription className="line-clamp-2">
+                      {pkg.description}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4 line-clamp-2">{pkg.description}</p>
                     <div className="flex items-center justify-between">
-                      <Badge variant="outline">{pkg.categoryName}</Badge>
+                      <Badge variant="outline">{pkg.destination}</Badge>
                       <div className="flex space-x-2">
-                        <Link href={`/admin/packages/${pkg._id}/edit`}>
+                        {/* <Link
+                          href={`/admin/packages/AED {pkg._id?.toString()}/edit`}
+                        >
                           <Button size="sm" variant="outline">
                             <Edit className="h-4 w-4" />
                           </Button>
-                        </Link>
+                        </Link> */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
@@ -202,15 +205,20 @@ export default function AdminPackagesPage() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Package</AlertDialogTitle>
+                              <AlertDialogTitle>
+                                Delete Package
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete "{pkg.name}"? This action cannot be undone.
+                                Are you sure you want to delete "{pkg.name}"?
+                                This action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
-                                onClick={() => handleDelete(pkg._id!)}
+                                onClick={() =>
+                                  handleDelete(pkg._id?.toString() ?? "")
+                                }
                                 className="bg-red-600 hover:bg-red-700"
                               >
                                 Delete
@@ -233,8 +241,12 @@ export default function AdminPackagesPage() {
                   <Plus className="h-12 w-12 text-gray-400" />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No packages yet</h3>
-              <p className="text-gray-500 mb-4">Create your first package to get started.</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                No packages yet
+              </h3>
+              <p className="text-gray-500 mb-4">
+                Create your first travel package to get started.
+              </p>
               <Link href="/admin/packages/new">
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -246,5 +258,5 @@ export default function AdminPackagesPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

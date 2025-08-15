@@ -1,66 +1,69 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getDatabase } from "@/lib/mongodb"
-import type { PackageCategory } from "@/lib/models"
+import { NextRequest, NextResponse } from "next/server";
+import { getDatabase } from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const db = await getDatabase()
-    const categories = await db.collection("package_categories").find({}).sort({ createdAt: -1 }).toArray()
+    const db = await getDatabase();
+    const categories = await db
+      .collection("packageCategories")
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
 
-    // Convert MongoDB _id to string
-    const formattedCategories = categories.map((category) => ({
-      ...category,
-      _id: category._id.toString(),
-    }))
+    // Convert _id ObjectId to string for client
+    const categoriesWithIdString = categories.map((cat) => ({
+      ...cat,
+      _id: cat._id.toString(),
+    }));
 
-    return NextResponse.json(formattedCategories)
+    return NextResponse.json(categoriesWithIdString);
   } catch (error) {
-    console.error("Error fetching package categories:", error)
-    return NextResponse.json({ error: "Failed to fetch package categories" }, { status: 500 })
+    console.error("Failed to fetch categories:", error);
+    return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json()
+    const { name, description, image } = await req.json();
 
-    if (!body.name || !body.description) {
-      return NextResponse.json({ error: "Name and description are required" }, { status: 400 })
+    if (!name || !description) {
+      return NextResponse.json(
+        { error: "Name and description are required" },
+        { status: 400 }
+      );
     }
 
-    const db = await getDatabase()
+    const slug = name.trim().toLowerCase().replace(/\s+/g, "-");
 
-    // Create slug from name
-    const slug = body.name
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "")
+    const db = await getDatabase();
 
-    // Check if slug already exists
-    const existingCategory = await db.collection("package_categories").findOne({ slug })
-    if (existingCategory) {
-      return NextResponse.json({ error: "A category with this name already exists" }, { status: 400 })
-    }
-
-    const categoryData: Omit<PackageCategory, "_id"> = {
-      name: body.name,
-      description: body.description,
-      slug: slug,
-      image: body.image || "",
+    const result = await db.collection("packageCategories").insertOne({
+      name,
+      description,
+      slug,
+      image: image || "",
       createdAt: new Date(),
       updatedAt: new Date(),
+    });
+
+    if (!result.acknowledged) {
+      return NextResponse.json(
+        { error: "Failed to create category" },
+        { status: 500 }
+      );
     }
 
-    const result = await db.collection("package_categories").insertOne(categoryData)
-
-    const newCategory = {
-      _id: result.insertedId.toString(),
-      ...categoryData,
-    }
-
-    return NextResponse.json(newCategory)
+    return NextResponse.json({
+      message: "Category created successfully",
+      id: result.insertedId.toString(),
+    });
   } catch (error) {
-    console.error("Error creating package category:", error)
-    return NextResponse.json({ error: "Failed to create package category" }, { status: 500 })
+    console.error("Failed to create category:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

@@ -31,7 +31,7 @@ export function generateInvoicePDF(booking: BookingData) {
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(24)
   doc.setFont("helvetica", "bold")
-  doc.text("AIJ HOLIDAYS", 20, 25)
+  doc.text("AFI Travel and Tourism", 20, 25)
   doc.setFontSize(12)
   doc.setFont("helvetica", "normal")
   doc.text("Travel & Tours", 20, 32)
@@ -116,7 +116,7 @@ export function generateInvoicePDF(booking: BookingData) {
   doc.setFontSize(8)
   doc.setFont("helvetica", "normal")
   doc.setTextColor(...secondaryColor)
-  doc.text("Thank you for choosing AIJ Holidays! We look forward to serving you.", 20, 270)
+  doc.text("Thank you for choosing AFI Travel and Tourism! We look forward to serving you.", 20, 270)
   doc.text("For any queries, contact us at info@aijholidays.com or +1 (555) 123-4567", 20, 277)
 
   // Terms

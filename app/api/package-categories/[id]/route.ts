@@ -94,7 +94,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     // Check if category has associated packages
     const packagesCount = await db.collection("packages").countDocuments({
-      category: id,
+      categoryId: id,
     })
 
     if (packagesCount > 0) {

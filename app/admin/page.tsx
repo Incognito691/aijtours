@@ -19,13 +19,39 @@ import {
   Users,
   Plus,
   FolderOpen,
+  LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
+
+interface Stats {
+  packages: number;
+  events: number;
+  bookings: number;
+  messages: number;
+  categories: number;
+}
+
+interface StatCard {
+  title: string;
+  value: number;
+  icon: LucideIcon;
+  color: string;
+  sub: string;
+}
+
+interface QuickActionProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  primaryHref?: string;
+  secondaryHref: string;
+  hidePrimary?: boolean;
+}
 
 export default function AdminDashboard() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<Stats>({
     packages: 0,
     events: 0,
     bookings: 0,
@@ -90,7 +116,7 @@ export default function AdminDashboard() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
   }
@@ -102,211 +128,153 @@ export default function AdminDashboard() {
     return null;
   }
 
+  const statCards: StatCard[] = [
+    {
+      title: "Categories",
+      value: stats.categories,
+      icon: FolderOpen,
+      color: "text-blue-500",
+      sub: "Package categories",
+    },
+    {
+      title: "Packages",
+      value: stats.packages,
+      icon: Package2,
+      color: "text-green-500",
+      sub: "Travel packages",
+    },
+    {
+      title: "Events",
+      value: stats.events,
+      icon: Calendar,
+      color: "text-purple-500",
+      sub: "Special events",
+    },
+    {
+      title: "Bookings",
+      value: stats.bookings,
+      icon: Users,
+      color: "text-orange-500",
+      sub: "Customer bookings",
+    },
+    {
+      title: "Messages",
+      value: stats.messages,
+      icon: MessageSquare,
+      color: "text-red-500",
+      sub: "Contact messages",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
             Admin Dashboard
           </h1>
-          <p className="text-xl text-gray-600">
-            Manage your travel packages, events, and bookings
+          <p className="text-lg text-gray-600 mt-2">
+            Manage travel packages, events, and bookings with ease
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Categories
-              </CardTitle>
-              <FolderOpen className="h-5 w-5 text-blue-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900">
-                {stats.categories}
-              </div>
-              <p className="text-sm text-gray-500 mt-1">Package categories</p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Packages
-              </CardTitle>
-              <Package2 className="h-5 w-5 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900">
-                {stats.packages}
-              </div>
-              <p className="text-sm text-gray-500 mt-1">Travel packages</p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Events
-              </CardTitle>
-              <Calendar className="h-5 w-5 text-purple-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900">
-                {stats.events}
-              </div>
-              <p className="text-sm text-gray-500 mt-1">Special events</p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Bookings
-              </CardTitle>
-              <Users className="h-5 w-5 text-orange-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900">
-                {stats.bookings}
-              </div>
-              <p className="text-sm text-gray-500 mt-1">Customer bookings</p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                Messages
-              </CardTitle>
-              <MessageSquare className="h-5 w-5 text-red-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900">
-                {stats.messages}
-              </div>
-              <p className="text-sm text-gray-500 mt-1">Contact messages</p>
-            </CardContent>
-          </Card>
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-16">
+          {statCards.map((card) => (
+            <Card
+              key={card.title}
+              className="hover:shadow-xl transition-all duration-300 rounded-2xl border border-gray-200"
+            >
+              <CardHeader className="flex flex-row items-center justify-between pb-3">
+                <CardTitle className="text-sm font-medium text-gray-500">
+                  {card.title}
+                </CardTitle>
+                <card.icon className={`h-6 w-6 ${card.color}`} />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-gray-900">
+                  {card.value}
+                </div>
+                <p className="text-sm text-gray-500">{card.sub}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold flex items-center">
-                <FolderOpen className="h-6 w-6 mr-3 text-blue-600" />
-                Manage Categories
-              </CardTitle>
-              <CardDescription className="text-base">
-                Create and organize package categories to help customers find
-                the perfect travel experience
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Link href="/admin/categories/new">
-                <Button className="w-full h-12 text-base">
-                  <Plus className="h-5 w-5 mr-3" />
-                  Add New Category
-                </Button>
-              </Link>
-              <Link href="/admin/categories">
-                <Button
-                  variant="outline"
-                  className="w-full h-12 text-base bg-transparent"
-                >
-                  View All Categories
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold flex items-center">
-                <Package2 className="h-6 w-6 mr-3 text-green-600" />
-                Manage Packages
-              </CardTitle>
-              <CardDescription className="text-base">
-                Create, edit, and manage travel packages with detailed
-                itineraries and pricing
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Link href="/admin/packages/new">
-                <Button className="w-full h-12 text-base">
-                  <Plus className="h-5 w-5 mr-3" />
-                  Add New Package
-                </Button>
-              </Link>
-              <Link href="/admin/packages">
-                <Button
-                  variant="outline"
-                  className="w-full h-12 text-base bg-transparent"
-                >
-                  View All Packages
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold flex items-center">
-                <Calendar className="h-6 w-6 mr-3 text-purple-600" />
-                Manage Events
-              </CardTitle>
-              <CardDescription className="text-base">
-                Create and manage special events, tours, and time-sensitive
-                travel opportunities
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Link href="/admin/events/new">
-                <Button className="w-full h-12 text-base">
-                  <Plus className="h-5 w-5 mr-3" />
-                  Add New Event
-                </Button>
-              </Link>
-              <Link href="/admin/events">
-                <Button
-                  variant="outline"
-                  className="w-full h-12 text-base bg-transparent"
-                >
-                  View All Events
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold flex items-center">
-                <Users className="h-6 w-6 mr-3 text-orange-600" />
-                Manage Bookings
-              </CardTitle>
-              <CardDescription className="text-base">
-                View and manage customer bookings, track payments, and handle
-                customer requests
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Link href="/admin/bookings">
-                <Button
-                  variant="outline"
-                  className="w-full h-12 text-base bg-transparent"
-                >
-                  View All Bookings
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <QuickAction
+            icon={<FolderOpen className="h-6 w-6 mr-3 text-blue-500" />}
+            title="Manage Categories"
+            description="Organize package categories for easy browsing"
+            primaryHref="/admin/categories/new"
+            secondaryHref="/admin/categories"
+          />
+          <QuickAction
+            icon={<Package2 className="h-6 w-6 mr-3 text-green-500" />}
+            title="Manage Packages"
+            description="Create and update travel packages"
+            primaryHref="/admin/packages/new"
+            secondaryHref="/admin/packages"
+          />
+          <QuickAction
+            icon={<Calendar className="h-6 w-6 mr-3 text-purple-500" />}
+            title="Manage Events"
+            description="Plan and manage special travel events"
+            primaryHref="/admin/events/new"
+            secondaryHref="/admin/events"
+          />
+          <QuickAction
+            icon={<Users className="h-6 w-6 mr-3 text-orange-500" />}
+            title="Manage Bookings"
+            description="Track and manage customer bookings"
+            secondaryHref="/admin/bookings"
+            hidePrimary
+          />
         </div>
       </div>
     </div>
+  );
+}
+
+function QuickAction({
+  icon,
+  title,
+  description,
+  primaryHref,
+  secondaryHref,
+  hidePrimary,
+}: QuickActionProps) {
+  return (
+    <Card className="hover:shadow-lg transition-all duration-300 rounded-2xl border border-gray-200">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl font-semibold flex items-center">
+          {icon}
+          {title}
+        </CardTitle>
+        <CardDescription className="text-base text-gray-500">
+          {description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {!hidePrimary && primaryHref && (
+          <Link href={primaryHref}>
+            <Button className="w-full h-11 text-base shadow-sm hover:shadow-md transition-all">
+              <Plus className="h-5 w-5 mr-2" /> Add New
+            </Button>
+          </Link>
+        )}
+        <Link href={secondaryHref}>
+          <Button
+            variant="outline"
+            className="w-full h-11 text-base border-gray-300 hover:border-gray-400"
+          >
+            View All
+          </Button>
+        </Link>
+      </CardContent>
+    </Card>
   );
 }

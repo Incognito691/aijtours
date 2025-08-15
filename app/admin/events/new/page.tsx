@@ -1,25 +1,31 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useUser } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import Navbar from "@/components/navbar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
-import { ArrowLeft, Plus, X } from "lucide-react"
-import ImageUpload from "@/components/image-upload"
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Navbar from "@/components/navbar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft, Plus, X } from "lucide-react";
+import ImageUpload from "@/components/image-upload";
 
 export default function NewEventPage() {
-  const { user, isLoaded } = useUser()
-  const router = useRouter()
-  const { toast } = useToast()
+  const { user, isLoaded } = useUser();
+  const router = useRouter();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -28,19 +34,24 @@ export default function NewEventPage() {
     price: "",
     tags: [] as string[],
     images: [] as string[],
-  })
-  const [submitting, setSubmitting] = useState(false)
-  const [newTag, setNewTag] = useState("")
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [newTag, setNewTag] = useState("");
 
   useEffect(() => {
-    if (isLoaded && (!user || user.emailAddresses[0]?.emailAddress !== "sahilniraula00@gmail.com")) {
-      router.push("/")
+    if (
+      isLoaded &&
+      (!user ||
+        user.emailAddresses[0]?.emailAddress !==
+          process.env.NEXT_PUBLIC_ADMIN_EMAIL)
+    ) {
+      router.push("/");
     }
-  }, [user, isLoaded, router])
+  }, [user, isLoaded, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitting(true)
+    e.preventDefault();
+    setSubmitting(true);
 
     try {
       const response = await fetch("/api/events", {
@@ -52,63 +63,68 @@ export default function NewEventPage() {
           ...formData,
           price: Number.parseFloat(formData.price),
         }),
-      })
+      });
 
       if (response.ok) {
         toast({
           title: "Event created!",
           description: "The new event has been successfully created.",
-        })
-        router.push("/admin/events")
+        });
+        router.push("/admin/events");
       } else {
-        throw new Error("Failed to create event")
+        throw new Error("Failed to create event");
       }
     } catch (error) {
-      console.error("Error creating event:", error)
+      console.error("Error creating event:", error);
       toast({
         title: "Error",
         description: "Failed to create event. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }))
-  }
+    }));
+  };
 
   const addTag = () => {
     if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
       setFormData((prev) => ({
         ...prev,
         tags: [...prev.tags, newTag.trim()],
-      }))
-      setNewTag("")
+      }));
+      setNewTag("");
     }
-  }
+  };
 
   const removeTag = (tagToRemove: string) => {
     setFormData((prev) => ({
       ...prev,
       tags: prev.tags.filter((tag) => tag !== tagToRemove),
-    }))
-  }
+    }));
+  };
 
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
-    )
+    );
   }
 
-  if (!user || user.emailAddresses[0]?.emailAddress !== "sahilniraula00@gmail.com") {
-    return null
+  if (
+    !user ||
+    user.emailAddresses[0]?.emailAddress !== process.env.NEXT_PUBLIC_ADMIN_EMAIL
+  ) {
+    return null;
   }
 
   return (
@@ -117,7 +133,10 @@ export default function NewEventPage() {
 
       <div className="max-w-4xl mx-auto px-6 py-8">
         <div className="mb-8">
-          <Link href="/admin/events" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-2">
+          <Link
+            href="/admin/events"
+            className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-2"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Events
           </Link>
@@ -205,7 +224,9 @@ export default function NewEventPage() {
           <Card>
             <CardHeader>
               <CardTitle>Tags</CardTitle>
-              <CardDescription>Add tags to categorize your event</CardDescription>
+              <CardDescription>
+                Add tags to categorize your event
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex gap-2">
@@ -213,7 +234,9 @@ export default function NewEventPage() {
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
                   placeholder="Add a tag"
-                  onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
+                  onKeyPress={(e) =>
+                    e.key === "Enter" && (e.preventDefault(), addTag())
+                  }
                 />
                 <Button type="button" onClick={addTag}>
                   <Plus className="h-4 w-4" />
@@ -248,7 +271,9 @@ export default function NewEventPage() {
             <CardContent>
               <ImageUpload
                 images={formData.images}
-                onImagesChange={(images) => setFormData((prev) => ({ ...prev, images }))}
+                onImagesChange={(images) =>
+                  setFormData((prev) => ({ ...prev, images }))
+                }
                 maxImages={5}
               />
             </CardContent>
@@ -268,5 +293,5 @@ export default function NewEventPage() {
         </form>
       </div>
     </div>
-  )
+  );
 }
