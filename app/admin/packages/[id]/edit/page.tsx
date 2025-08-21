@@ -49,7 +49,7 @@ export default function EditPackagePage() {
   useEffect(() => {
     const fetchPackage = async () => {
       try {
-        const res = await fetch(`/api/packages/AED {id}`);
+        const res = await fetch(`/api/packages/${id}`);
         if (!res.ok) throw new Error("Failed to fetch package");
         const data: Package = await res.json();
         setFormData(data);
@@ -88,7 +88,7 @@ export default function EditPackagePage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await fetch(`/api/packages/AED {id}`, {
+      const res = await fetch(`/api/packages/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

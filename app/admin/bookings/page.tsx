@@ -24,7 +24,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Calendar, MapPin, Users, Mail, Phone } from "lucide-react";
+import {
+  Trash2,
+  Calendar,
+  MapPin,
+  Users,
+  Mail,
+  Phone,
+  User,
+  Package,
+  Ticket,
+} from "lucide-react";
 
 interface Booking {
   _id: string;
@@ -86,7 +96,7 @@ export default function AdminBookingsPage() {
   const handleDelete = async (bookingId: string) => {
     setDeleting(bookingId);
     try {
-      const response = await fetch(`/api/bookings/AED {bookingId}`, {
+      const response = await fetch(`/api/bookings/${bookingId}`, {
         method: "DELETE",
       });
 
@@ -120,6 +130,9 @@ export default function AdminBookingsPage() {
     return null;
   }
 
+  const packageBookings = bookings.filter((b) => b.type === "package");
+  const eventBookings = bookings.filter((b) => b.type === "event");
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
@@ -136,6 +149,147 @@ export default function AdminBookingsPage() {
       </div>
     );
   }
+
+  const BookingCard = ({ booking }: { booking: Booking }) => {
+    const isPackage = booking.type === "package";
+    const colorScheme = isPackage
+      ? {
+          border: "border-l-sky-500",
+          bg: "bg-sky-50 dark:bg-sky-900/10",
+          badge: "bg-sky-500 hover:bg-sky-600",
+          amount: "text-sky-600",
+          icon: <Package className="h-5 w-5 text-sky-500 mr-2" />,
+        }
+      : {
+          border: "border-l-purple-500",
+          bg: "bg-purple-50 dark:bg-purple-900/10",
+          badge: "bg-purple-500 hover:bg-purple-600",
+          amount: "text-purple-600",
+          icon: <Ticket className="h-5 w-5 text-purple-500 mr-2" />,
+        };
+
+    return (
+      <Card
+        key={booking._id}
+        className={`hover:shadow-lg transition-shadow duration-200 border-l-4 ${colorScheme.border}`}
+      >
+        <CardHeader className={`pb-3 ${colorScheme.bg}`}>
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-2">
+              {colorScheme.icon}
+              <div>
+                <CardTitle className="text-lg">
+                  {isPackage ? booking.packageName : booking.eventName}
+                </CardTitle>
+                <CardDescription className="flex items-center mt-1">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  {isPackage ? booking.destination : booking.location}
+                </CardDescription>
+              </div>
+            </div>
+            <Badge variant="default" className={colorScheme.badge}>
+              {booking.status}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4 pt-4">
+          <div className="space-y-2">
+            <div className="flex items-center text-sm text-gray-600">
+              <User className="h-4 w-4 mr-2" />
+              <span className="font-medium">{booking.userName}</span>
+            </div>
+            <div className="flex items-center text-sm text-gray-600">
+              <Mail className="h-4 w-4 mr-2" />
+              {booking.userEmail}
+            </div>
+            <div className="flex items-center text-sm text-gray-600">
+              <Phone className="h-4 w-4 mr-2" />
+              {booking.bookingDetails.contactNumber}
+            </div>
+          </div>
+
+          <div className="border-t pt-3 space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center text-gray-600">
+                <Calendar className="h-4 w-4 mr-1" />
+                {isPackage ? "Travel Date:" : "Event Date:"}
+              </span>
+              <span className="font-medium">
+                {new Date(
+                  booking.bookingDetails.travelDate
+                ).toLocaleDateString()}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center text-gray-600">
+                <Users className="h-4 w-4 mr-1" />
+                {isPackage ? "Travelers:" : "Attendees:"}
+              </span>
+              <span className="font-medium">
+                {booking.bookingDetails.travelers}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">Total Amount:</span>
+              <span className={`font-bold text-lg ${colorScheme.amount}`}>
+                AED {booking.totalAmount}
+              </span>
+            </div>
+          </div>
+
+          {booking.bookingDetails.specialRequests && (
+            <div className="border-t pt-3">
+              <p className="text-sm text-gray-600 mb-1">Special Requests:</p>
+              <p className={`text-sm ${colorScheme.bg} p-2 rounded`}>
+                {booking.bookingDetails.specialRequests}
+              </p>
+            </div>
+          )}
+
+          <div className="border-t pt-3">
+            <p className="text-xs text-gray-500">
+              Booked on: {new Date(booking.createdAt).toLocaleDateString()} at{" "}
+              {new Date(booking.createdAt).toLocaleTimeString()}
+            </p>
+          </div>
+
+          <div className="border-t pt-3">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="w-full"
+                  disabled={deleting === booking._id}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  {deleting === booking._id ? "Deleting..." : "Delete Booking"}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Booking</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete this booking? This action
+                    cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => handleDelete(booking._id)}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -162,143 +316,48 @@ export default function AdminBookingsPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {bookings.map((booking) => (
-              <Card
-                key={booking._id}
-                className="hover:shadow-lg transition-shadow duration-200"
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">
-                        {booking.type === "package"
-                          ? booking.packageName
-                          : booking.eventName}
-                      </CardTitle>
-                      <CardDescription className="flex items-center mt-1">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {booking.type === "package"
-                          ? booking.destination
-                          : booking.location}
-                      </CardDescription>
-                    </div>
-                    <Badge
-                      variant={
-                        booking.status === "confirmed" ? "default" : "secondary"
-                      }
-                    >
-                      {booking.status}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Customer Info */}
-                  <div className="space-y-2">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Mail className="h-4 w-4 mr-2" />
-                      <span className="font-medium">{booking.userName}</span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Mail className="h-4 w-4 mr-2" />
-                      {booking.userEmail}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Phone className="h-4 w-4 mr-2" />
-                      {booking.bookingDetails.contactNumber}
-                    </div>
-                  </div>
+          <div className="space-y-12">
+            {/* Package Bookings Section */}
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+                <Package className="h-6 w-6 text-sky-500 mr-2" />
+                Package Bookings ({packageBookings.length})
+              </h2>
+              {packageBookings.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {packageBookings.map((booking) => (
+                    <BookingCard key={booking._id} booking={booking} />
+                  ))}
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="text-center py-8">
+                    <p className="text-gray-500">No package bookings yet</p>
+                  </CardContent>
+                </Card>
+              )}
+            </section>
 
-                  {/* Booking Details */}
-                  <div className="border-t pt-3 space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="flex items-center text-gray-600">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        Travel Date:
-                      </span>
-                      <span className="font-medium">
-                        {new Date(
-                          booking.bookingDetails.travelDate
-                        ).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="flex items-center text-gray-600">
-                        <Users className="h-4 w-4 mr-1" />
-                        Travelers:
-                      </span>
-                      <span className="font-medium">
-                        {booking.bookingDetails.travelers}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Total Amount:</span>
-                      <span className="font-bold text-lg text-green-600">
-                        AED {booking.totalAmount}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Special Requests */}
-                  {booking.bookingDetails.specialRequests && (
-                    <div className="border-t pt-3">
-                      <p className="text-sm text-gray-600 mb-1">
-                        Special Requests:
-                      </p>
-                      <p className="text-sm bg-gray-50 p-2 rounded">
-                        {booking.bookingDetails.specialRequests}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Booking Date */}
-                  <div className="border-t pt-3">
-                    <p className="text-xs text-gray-500">
-                      Booked on:{" "}
-                      {new Date(booking.createdAt).toLocaleDateString()} at{" "}
-                      {new Date(booking.createdAt).toLocaleTimeString()}
-                    </p>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="border-t pt-3">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          className="w-full"
-                          disabled={deleting === booking._id}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          {deleting === booking._id
-                            ? "Deleting..."
-                            : "Delete Booking"}
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Delete Booking</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Are you sure you want to delete this booking? This
-                            action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDelete(booking._id)}
-                            className="bg-red-600 hover:bg-red-700"
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {/* Event Bookings Section */}
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+                <Ticket className="h-6 w-6 text-purple-500 mr-2" />
+                Event Bookings ({eventBookings.length})
+              </h2>
+              {eventBookings.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {eventBookings.map((booking) => (
+                    <BookingCard key={booking._id} booking={booking} />
+                  ))}
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="text-center py-8">
+                    <p className="text-gray-500">No event bookings yet</p>
+                  </CardContent>
+                </Card>
+              )}
+            </section>
           </div>
         )}
       </div>

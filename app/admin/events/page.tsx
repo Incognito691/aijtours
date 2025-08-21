@@ -74,7 +74,7 @@ export default function AdminEventsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/events/AED {id}`, {
+      const response = await fetch(`/api/events/${id}`, {
         method: "DELETE",
       });
 

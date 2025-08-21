@@ -26,6 +26,7 @@ export interface Package {
   categoryName: string
   featured?: boolean
   limitedOffer?: boolean
+  rating?: number
   createdAt: Date
   updatedAt: Date
 }

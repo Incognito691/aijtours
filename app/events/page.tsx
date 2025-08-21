@@ -82,7 +82,7 @@ export default function EventsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gray-100 border-red-700">
       <Navbar />
 
       {/* Hero */}
@@ -272,7 +272,8 @@ export default function EventsPage() {
                       className="absolute top-3 right-3"
                     >
                       <div className="bg-white/95 text-gray-900 font-medium text-sm rounded-lg px-3 py-1.5 shadow-md border border-gray-200 flex items-center gap-1.5">
-                        <BadgePercent className="h-4 w-4 text-blue-600" />$
+                        <BadgePercent className="h-4 w-4 text-blue-600" />
+                        AED
                         {event.price}
                       </div>
                     </motion.div>

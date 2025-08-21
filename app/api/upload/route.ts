@@ -1,7 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { writeFile, mkdir } from "fs/promises"
-import { join } from "path"
-import { existsSync } from "fs"
+import { supabaseAdmin } from "@/lib/supabase"
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,26 +20,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File size must be less than 5MB" }, { status: 400 })
     }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), "public", "uploads")
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true })
-    }
-
     // Generate unique filename
     const timestamp = Date.now()
     const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_")
     const filename = `${timestamp}_${originalName}`
-    const filepath = join(uploadsDir, filename)
 
-    // Write file
-    await writeFile(filepath, buffer)
+    // Upload to Supabase Storage using admin client
+    const { data: uploadData, error } = await supabaseAdmin.storage
+      .from('afisalesimages')
+      .upload(filename, file)
+
+    if (error) {
+      console.error("Supabase upload error:", error)
+      return NextResponse.json({ error: "Failed to upload file" }, { status: 500 })
+    }
+
+    // Get the public URL using admin client
+    const { data: { publicUrl } } = supabaseAdmin.storage
+      .from('afisalesimages')
+      .getPublicUrl(filename)
 
     // Return the public URL
-    const url = `/uploads/${filename}`
+    const url = publicUrl
 
     return NextResponse.json({ url })
   } catch (error) {

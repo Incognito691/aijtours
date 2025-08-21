@@ -241,7 +241,7 @@ export default function NewPackagePage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="price">Price (AED ) *</Label>
+                  <Label htmlFor="price">Price (AED) *</Label>
                   <Input
                     id="price"
                     type="number"
@@ -471,7 +471,7 @@ export default function NewPackagePage() {
                           "dailyItinerary"
                         )
                       }
-                      placeholder={`Day AED {index + 1} activities...`}
+                      placeholder={`Day ${index + 1} activities...`}
                     />
                     {formData.dailyItinerary.length > 1 && (
                       <Button

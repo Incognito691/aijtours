@@ -1,11 +1,11 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Lexend } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/toaster";
 
-const poppins = Poppins({
+const poppins = Lexend({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-poppins",
@@ -43,7 +43,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${poppins.variable} font-sans`}>
+        <body className={`${poppins.className}`}>
           {children}
           <Toaster />
         </body>

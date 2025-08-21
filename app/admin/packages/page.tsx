@@ -77,7 +77,7 @@ export default function AdminPackagesPage() {
   // Delete handler
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/packages/AED {id}`, {
+      const response = await fetch(`/api/packages/${id}`, {
         method: "DELETE",
       });
 
@@ -186,13 +186,6 @@ export default function AdminPackagesPage() {
                     <div className="flex items-center justify-between">
                       <Badge variant="outline">{pkg.destination}</Badge>
                       <div className="flex space-x-2">
-                        {/* <Link
-                          href={`/admin/packages/AED {pkg._id?.toString()}/edit`}
-                        >
-                          <Button size="sm" variant="outline">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </Link> */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button

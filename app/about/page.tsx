@@ -32,14 +32,14 @@ export default function AboutPage() {
     {
       icon: Users,
       label: "Happy Travelers",
-      value: "10,000+",
+      value: "100+",
       color: "from-blue-500 to-cyan-500",
       bgColor: "bg-blue-50",
     },
     {
       icon: Globe,
       label: "Amazing Destinations",
-      value: "50+",
+      value: "20+",
       color: "from-green-500 to-emerald-500",
       bgColor: "bg-green-50",
     },
@@ -63,11 +63,15 @@ export default function AboutPage() {
     {
       name: "Noa Gabayan",
       role: "Administrative",
-      image: "/placeholder.svg?height=400&width=400&text=Sarah+Johnson",
+      image: "/images/noa.jpg",
       description:
-        "Visionary leader with 15+ years in the travel industry, passionate about creating life-changing experiences.",
+        "Visionary leader with 5+ years in the travel industry, passionate about creating life-changing experiences.",
       specialty: "Luxury Travel & Adventure Tours",
-      social: { linkedin: "#", twitter: "#" },
+      social: {
+        linkedin:
+          "https://www.linkedin.com/in/noa-gabayan-37951a369?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app ",
+        twitter: "#",
+      },
     },
     {
       name: "Divyam Thakur",
@@ -83,9 +87,9 @@ export default function AboutPage() {
       },
     },
     {
-      name: "Emily Rodriguez",
+      name: "Almir Huko ",
       role: "Travel Experience Designer",
-      image: "/placeholder.svg?height=400&width=400&text=Emily+Rodriguez",
+      image: "/images/almir.jpg",
       description:
         "Creative curator crafting unique experiences that connect travelers with local cultures and hidden gems.",
       specialty: "Cultural Immersion & Custom Itineraries",
@@ -95,40 +99,42 @@ export default function AboutPage() {
 
   const milestones = [
     {
-      year: "2008",
+      year: "2024",
       title: "The Beginning",
       description:
-        "AFI Travel and tourism founded with a dream to make travel accessible to everyone",
+        "AFI Travel & Tourism was established with a vision to bring unique travel experiences to customers.",
       icon: Compass,
       color: "bg-gradient-to-br from-blue-500 to-cyan-600",
     },
     {
-      year: "2012",
-      title: "First 1000 Customers",
+      year: "Mid-2024",
+      title: "First International Tour",
       description:
-        "Celebrated our first milestone of serving 1000 happy travelers",
+        "Launched our Bosnia Tour Package, marking our first step into international travel services.",
       icon: Users,
       color: "bg-gradient-to-br from-green-500 to-emerald-600",
     },
     {
-      year: "2016",
-      title: "Global Expansion",
-      description: "Expanded to 25+ destinations across 4 continents",
+      year: "Mid-2025",
+      title: "Growing Success",
+      description:
+        "Successfully operated multiple Bosnia tour groups, creating memorable journeys for our travelers.",
       icon: Globe,
       color: "bg-gradient-to-br from-purple-500 to-indigo-600",
     },
     {
-      year: "2020",
-      title: "Digital Innovation",
-      description: "Launched virtual tours and contactless travel experiences",
+      year: "2025",
+      title: "Serving 100+ Happy Customers",
+      description:
+        "Reached our first milestone of delighting 100+ travelers through our Bosnia tour packages.",
       icon: Camera,
       color: "bg-gradient-to-br from-orange-500 to-red-600",
     },
     {
-      year: "2024",
-      title: "Sustainable Future",
+      year: " June 2025",
+      title: "Becoming a Full-Fledged Travel Agency",
       description:
-        "Leading eco-friendly travel initiatives and carbon-neutral packages",
+        "Expanded our services beyond Bosnia, establishing ourselves as a complete travel and tourism company.",
       icon: Heart,
       color: "bg-gradient-to-br from-teal-500 to-green-600",
     },
@@ -165,95 +171,115 @@ export default function AboutPage() {
     },
   ];
 
-  const toggleVideo = () => {
-    if (videoRef.current) {
-      if (isVideoPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsVideoPlaying(!isVideoPlaying);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <Navbar />
 
-      {/* Hero Section with Floating Elements */}
+      {/* Hero Section with Interactive Elements */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl animate-bounce"></div>
-          <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-purple-400/30 rounded-full blur-lg animate-pulse delay-1000"></div>
-          <div className="absolute bottom-40 right-1/3 w-24 h-24 bg-cyan-400/20 rounded-full blur-xl animate-bounce delay-500"></div>
+        {/* Dynamic Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[length:32px_32px]"></div>
+          {/* Animated Circles */}
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="backdrop-blur-sm bg-white/5 rounded-[3rem] p-12 border border-white/10 shadow-2xl"
-          >
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-4xl mx-auto">
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
               className="mb-8"
             >
-              <div className="inline-flex items-center space-x-4 bg-white/10 rounded-full px-6 py-3 mb-8">
-                <Plane className="h-6 w-6 text-cyan-400" />
-                <span className="text-lg font-medium">Est. 2024</span>
-                <Star className="h-6 w-6 text-yellow-400" />
+              <div className="inline-flex items-center bg-white/10 rounded-full px-6 py-3">
+                <Compass className="h-6 w-6 text-cyan-400 mr-3" />
+                <span className="text-lg font-medium text-white">
+                  Established 2024
+                </span>
+                <Star className="h-6 w-6 text-yellow-400 ml-3" />
               </div>
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="text-5xl lg:text-7xl font-bold mb-8"
             >
-              We Are
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
-                AFI Travel and Tourism
+              <span className="text-white">Discover the World with</span>
+              <span className="block mt-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
+                AFI Travel
               </span>
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-10 leading-relaxed"
+              transition={{ delay: 0.7, duration: 0.8 }}
+              className="text-xl text-blue-100 mb-16 leading-relaxed"
             >
-              Crafting extraordinary journeys and turning travel dreams into
-              unforgettable realities since 2024
+              Where every journey becomes a story, and every destination opens
+              new horizons. Join us in creating memories that last a lifetime.
             </motion.p>
 
+            {/* Interactive Features Grid */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+              transition={{ delay: 0.9, duration: 0.8 }}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto"
             >
-              <div className="flex items-center space-x-8 text-blue-200">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-white">15+</div>
-                  <div className="text-sm">Years</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-white">10K+</div>
-                  <div className="text-sm">Travelers</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-white">50+</div>
-                  <div className="text-sm">Destinations</div>
-                </div>
-              </div>
+              {[
+                {
+                  icon: Globe,
+                  value: "50+",
+                  label: "Destinations",
+                  color: "from-blue-400 to-cyan-400",
+                },
+                {
+                  icon: Users,
+                  value: "10K+",
+                  label: "Happy Travelers",
+                  color: "from-purple-400 to-pink-400",
+                },
+                {
+                  icon: Award,
+                  value: "15+",
+                  label: "Years Experience",
+                  color: "from-green-400 to-emerald-400",
+                },
+                {
+                  icon: Heart,
+                  value: "99%",
+                  label: "Satisfaction",
+                  color: "from-red-400 to-rose-400",
+                },
+              ].map((feature, index) => (
+                <motion.div
+                  key={feature.label}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className="relative group"
+                >
+                  <div className="relative p-6 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300">
+                    <div
+                      className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.color} mb-4`}
+                    >
+                      <feature.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {feature.value}
+                    </div>
+                    <div className="text-sm text-blue-100">{feature.label}</div>
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
-          </motion.div>
+
+            {/* Decorative Elements */}
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"></div>
+          </div>
         </div>
       </section>
 
@@ -377,8 +403,8 @@ export default function AboutPage() {
             >
               <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
                 <img
-                  className="w-full h-96 object-cover"
-                  src="/placeholder.svg?height=400&width=600&text=AIJ+Holidays+Story"
+                  className="w-full h-full object-cover"
+                  src="/images/logo.jpg"
                   alt="Story"
                 />
                 {/* <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300"></div> */}
@@ -615,7 +641,7 @@ export default function AboutPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              Meet Our Travel Experts
+              Meet Our Teams
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               The passionate team behind your unforgettable adventures
@@ -629,38 +655,47 @@ export default function AboutPage() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
+                whileHover={{ y: -8 }}
                 className="group cursor-pointer"
               >
-                <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden bg-white group-hover:bg-gradient-to-br group-hover:from-white group-hover:to-blue-50">
-                  <div className="relative">
-                    <div className="relative w-full h-96 overflow-hidden">
+                <Card className="border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl overflow-hidden bg-white hover:border-blue-200 relative">
+                  {/* Profile Image */}
+                  <div className="flex justify-center mt-8">
+                    <div className="relative w-44 h-44 rounded-full overflow-hidden ring-4 ring-indigo-100 group-hover:ring-blue-200 transition-all duration-300">
                       <Image
                         src={member.image}
                         alt={member.name}
                         fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </div>
-                    <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="text-sm font-medium bg-black/50 backdrop-blur-sm rounded-lg px-3 py-1">
-                        {member.specialty}
-                      </div>
                     </div>
                   </div>
 
-                  <CardContent className="p-8">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
+                  <CardContent className="p-8 text-center">
+                    {/* Name */}
+                    <h3 className="text-2xl font-bold text-gray-900 mt-6 group-hover:text-blue-600 transition-colors duration-300">
                       {member.name}
                     </h3>
-                    <p className="text-blue-600 font-semibold mb-4 text-lg">
+
+                    {/* Role */}
+                    <p className="text-blue-600 font-medium mb-4">
                       {member.role}
                     </p>
+
+                    {/* Specialty Badge */}
+                    <div className="inline-block mb-4">
+                      <span className="text-xs font-medium bg-gradient-to-r from-indigo-100 to-blue-100 text-blue-700 px-3 py-1 rounded-full">
+                        {member.specialty}
+                      </span>
+                    </div>
+
+                    {/* Description */}
                     <p className="text-gray-600 leading-relaxed mb-6">
                       {member.description}
                     </p>
-                    <div className="flex space-x-4">
+
+                    {/* Connect Button */}
+                    <div className="flex justify-center">
                       <Link href={member.social.linkedin} target="_blank">
                         <Button
                           variant="outline"
@@ -711,22 +746,26 @@ export default function AboutPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Button
-                size="lg"
-                className="group bg-white text-blue-600 hover:bg-gray-50 px-10 py-4 text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-              >
-                <Plane className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-                Plan Your Journey
-                <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="group border-2 border-white/40 text-white hover:bg-white hover:text-blue-600 px-10 py-4 text-lg rounded-full bg-white/10 backdrop-blur-sm transition-all duration-300 hover:scale-105"
-              >
-                <Camera className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-                View Destinations
-              </Button>
+              <Link href="/contact">
+                <Button
+                  size="lg"
+                  className="group bg-white text-blue-600 hover:bg-gray-50 px-10 py-4 text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                >
+                  <Plane className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
+                  Plan Your Journey
+                  <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </Link>
+              <Link href="/destinations">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="group border-2 border-white/40 text-white hover:bg-white hover:text-blue-600 px-10 py-4 text-lg rounded-full bg-white/10 backdrop-blur-sm transition-all duration-300 hover:scale-105"
+                >
+                  <Camera className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
+                  View Destinations
+                </Button>
+              </Link>
             </div>
 
             <div className="mt-12 flex justify-center items-center space-x-12 text-blue-200">

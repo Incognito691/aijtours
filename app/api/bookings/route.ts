@@ -1,39 +1,112 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getDatabase } from "@/lib/mongodb"
-import type { Booking } from "@/lib/models"
+import { NextResponse } from "next/server";
+import clientPromise from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
+import { Booking, Package, Event } from "@/lib/models";
 
-export async function GET(request: NextRequest) {
+// GET all bookings (for Admin Dashboard)
+export async function GET() {
   try {
-    const db = await getDatabase()
-    const bookings = await db.collection<Booking>("bookings").find({}).toArray()
+    const client = await clientPromise;
+    const db = client.db("afisales");
 
-    return NextResponse.json(bookings)
+    const bookings = await db
+      .collection<Booking>("bookings")
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    const enrichedBookings = await Promise.all(
+      bookings.map(async (booking) => {
+        if (booking.type === "package" && booking.packageId) {
+          const pkg = await db
+            .collection<Package>("packages")
+            .findOne({ _id: new ObjectId(booking.packageId) });
+
+          return {
+            ...booking,
+            packageName: pkg?.name || "Unknown Package",
+            destination: pkg?.destination || "",
+          };
+        }
+
+        if (booking.type === "event" && booking.eventId) {
+          const evt = await db
+            .collection<Event>("events")
+            .findOne({ _id: new ObjectId(booking.eventId) });
+
+          return {
+            ...booking,
+            eventName: evt?.name || "Unknown Event",
+            location: evt?.location || "",
+          };
+        }
+
+        return booking;
+      })
+    );
+
+    return NextResponse.json(enrichedBookings);
   } catch (error) {
-    console.error("Error fetching bookings:", error)
-    return NextResponse.json({ error: "Failed to fetch bookings" }, { status: 500 })
+    console.error("❌ Error fetching bookings:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch bookings" },
+      { status: 500 }
+    );
   }
 }
 
-export async function POST(request: NextRequest) {
+// POST a new booking
+export async function POST(req: Request) {
   try {
-    const body = await request.json()
-    const db = await getDatabase()
+    const body = await req.json();
 
-    const bookingData: Omit<Booking, "_id"> = {
-      ...body,
+    const client = await clientPromise;
+    const db = client.db("afisales");
+
+    const newBooking: Booking = {
+      userId: body.userId ?? null,
+      userEmail: body.userEmail ?? body.bookingDetails?.email ?? "",
+      userName: body.userName ?? "Guest",
+      packageId: body.packageId,
+      eventId: body.eventId,
+      type: body.type ?? (body.packageId ? "package" : "event"),
       bookingDetails: {
-        ...body.bookingDetails,
-        travelDate: new Date(body.bookingDetails.travelDate),
+        travelers: body.bookingDetails?.travelers,
+        travelDate: new Date(body.bookingDetails?.travelDate),
+        specialRequests: body.bookingDetails?.specialRequests,
+        contactNumber: body.bookingDetails?.contactNumber,
       },
-      createdAt: new Date(),
+      totalAmount: body.totalAmount,
       status: "pending",
+      createdAt: new Date(),
+    };
+
+    const result = await db.collection("bookings").insertOne(newBooking);
+    const bookingId = result.insertedId.toString();
+
+    // Fetch package/event name (send back for frontend email/invoice)
+    let bookedItem = "";
+    if (newBooking.type === "package" && newBooking.packageId) {
+      const pkg = await db
+        .collection<Package>("packages")
+        .findOne({ _id: new ObjectId(newBooking.packageId) });
+      bookedItem = pkg?.name || "Unknown Package";
+    } else if (newBooking.type === "event" && newBooking.eventId) {
+      const evt = await db
+        .collection<Event>("events")
+        .findOne({ _id: new ObjectId(newBooking.eventId) });
+      bookedItem = evt?.name || "Unknown Event";
     }
 
-    const result = await db.collection<Booking>("bookings").insertOne(bookingData)
-
-    return NextResponse.json({ _id: result.insertedId, ...bookingData })
+    return NextResponse.json(
+      { message: "Booking created successfully", bookingId, bookedItem },
+      { status: 201 }
+    );
   } catch (error) {
-    console.error("Error creating booking:", error)
-    return NextResponse.json({ error: "Failed to create booking" }, { status: 500 })
+    console.error("❌ Error creating booking:", error);
+    return NextResponse.json(
+      { error: "Failed to create booking" },
+      { status: 500 }
+    );
   }
 }

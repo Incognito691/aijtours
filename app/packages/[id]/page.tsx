@@ -61,7 +61,20 @@ export default function PackageDetailPage() {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  // Currency helpers (AED)
+  const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
+  const EMAILJS_BOOKING_TEMPLATE_ID =
+    process.env.NEXT_PUBLIC_EMAILJS_BOOKING_TEMPLATE_ID || "";
+  const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
+  const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "";
+
+  useEffect(() => {
+    try {
+      if (EMAILJS_PUBLIC_KEY) {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+      }
+    } catch {}
+  }, []);
+
   const formatAED = (n: number | string) => {
     const num = typeof n === "string" ? Number(n) : n;
     if (Number.isNaN(num)) return "AED 0";
@@ -96,7 +109,6 @@ export default function PackageDetailPage() {
     }
   }, [params.id, router]);
 
-  // Pre-fill email if user is signed in
   useEffect(() => {
     if (user && user.emailAddresses[0]?.emailAddress) {
       setBookingData((prev) => ({
@@ -106,10 +118,81 @@ export default function PackageDetailPage() {
     }
   }, [user]);
 
+  const sendBookingEmails = async (args: {
+    bookingId: string;
+    customerName: string;
+    customerEmail: string;
+    packageName: string;
+    destination: string;
+    duration: string;
+    date: string;
+    travelers: number;
+    totalAmount: number;
+    contactNumber: string;
+    specialRequests: string;
+  }) => {
+    if (
+      !EMAILJS_SERVICE_ID ||
+      !EMAILJS_BOOKING_TEMPLATE_ID ||
+      !EMAILJS_PUBLIC_KEY
+    ) {
+      return;
+    }
+
+    const baseParams = {
+      booking_id: args.bookingId,
+      bookingId: args.bookingId,
+      package_name: args.packageName,
+      item: args.packageName,
+      customer_name: args.customerName,
+      customer_email: args.customerEmail,
+      destination: args.destination,
+      duration: args.duration,
+      travel_date: args.date,
+      travelers: String(args.travelers),
+      total_amount: formatAED(args.totalAmount),
+      contact_number: args.contactNumber,
+      special_requests: args.specialRequests || "None",
+      booking_type: "package",
+    };
+
+    try {
+      // Send to admin only, with complete booking information
+      if (ADMIN_EMAIL) {
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_BOOKING_TEMPLATE_ID, {
+          ...baseParams,
+          to_email: ADMIN_EMAIL,
+          to_name: "AFI Travel and Tourism - Sales",
+          from_name: "AFI Travel and Tourism System",
+          customer_email: args.customerEmail,
+          customer_name: args.customerName,
+          is_admin_notification: "true",
+        });
+      } else {
+        console.warn("Admin email not configured - no notification sent");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      throw error; // Re-throw to be handled by the caller
+    }
+  };
+
+  // ===========================
+  // Booking handler (BACKEND-DRIVEN)
+  // ===========================
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate email
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to book this package.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Simple email check
     if (!bookingData.email || !bookingData.email.includes("@")) {
       toast({
         title: "Invalid Email",
@@ -119,130 +202,100 @@ export default function PackageDetailPage() {
       return;
     }
 
+    if (!packageData?._id) {
+      toast({
+        title: "Package missing",
+        description: "This package cannot be booked at the moment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
     try {
-      const bookingPayload = {
-        userId: user?.id || "guest",
-        userEmail: bookingData.email,
-        userName: user?.fullName || user?.firstName || "Guest User",
-        packageId: packageData?._id,
-        type: "package",
-        bookingDetails: {
-          ...bookingData,
-          travelDate: new Date(bookingData.travelDate),
-        },
-        totalAmount: packageData
-          ? packageData.price * bookingData.travelers
-          : 0,
-      };
-
+      // 🎯 Only send what your /api/bookings expects
       const response = await fetch("/api/bookings", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bookingPayload),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          packageId: packageData._id,
+          eventId: undefined, // explicit: this is a package booking
+          bookingDetails: {
+            email: bookingData.email,
+            travelers: bookingData.travelers,
+            travelDate: new Date(bookingData.travelDate),
+          },
+          totalAmount: packageData.price * bookingData.travelers,
+          contactNumber: bookingData.contactNumber,
+          specialRequests: bookingData.specialRequests || "",
+        }),
       });
 
-      if (response.ok) {
-        const booking = await response.json();
-
-        // Generate and download PDF invoice
-        const invoiceData = {
-          bookingId: booking._id,
-          customerName: user?.fullName || user?.firstName || "Guest User",
-          customerEmail: bookingData.email,
-          packageName: packageData?.name || "",
-          destination: packageData?.destination || "",
-          duration: packageData?.duration || "",
-          date: bookingData.travelDate,
-          travelers: bookingData.travelers,
-          totalAmount: packageData
-            ? packageData.price * bookingData.travelers
-            : 0,
-          contactNumber: bookingData.contactNumber,
-          specialRequests: bookingData.specialRequests,
-          type: "package" as const,
-          // If your PDF generator supports it, pass a currency label
-          currency: "AED",
-        } as const;
-
-        const pdf = generateInvoicePDF(invoiceData);
-        pdf.save(`AIJ-Holidays-Invoice-${booking._id}.pdf`);
-
-        // Send email to customer
-        try {
-          await emailjs.send(
-            process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-            process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-            {
-              to_name: user?.fullName || user?.firstName || "Guest User",
-              to_email: bookingData.email,
-              from_name: "AIJ Holidays",
-              package_name: packageData?.name,
-              destination: packageData?.destination,
-              duration: packageData?.duration,
-              travel_date: new Date(
-                bookingData.travelDate
-              ).toLocaleDateString(),
-              travelers: bookingData.travelers,
-              total_amount: `${formatAED(
-                packageData ? packageData.price * bookingData.travelers : 0
-              )}`,
-              booking_id: booking._id,
-              contact_number: bookingData.contactNumber,
-              special_requests: bookingData.specialRequests || "None",
-            },
-            process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-          );
-
-          // Send email to admin
-          await emailjs.send(
-            process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-            process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-            {
-              to_name: "Admin",
-              to_email: "afitravelandtourism.sales@gmail.com",
-              from_name: "AIJ Holidays System",
-              package_name: packageData?.name,
-              destination: packageData?.destination,
-              duration: packageData?.duration,
-              travel_date: new Date(
-                bookingData.travelDate
-              ).toLocaleDateString(),
-              travelers: bookingData.travelers,
-              total_amount: `${formatAED(
-                packageData ? packageData.price * bookingData.travelers : 0
-              )}`,
-              booking_id: booking._id,
-              contact_number: bookingData.contactNumber,
-              special_requests: bookingData.specialRequests || "None",
-              customer_name: user?.fullName || user?.firstName || "Guest User",
-              customer_email: bookingData.email,
-            },
-            process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-          );
-        } catch (emailError) {
-          console.error("Email sending failed:", emailError);
-        }
-
-        toast({
-          title: "Booking Confirmed! 🎉",
-          description:
-            "Your invoice has been downloaded and confirmation emails have been sent.",
-        });
-
-        setBookingOpen(false);
-        setBookingData({
-          email: user?.emailAddresses[0]?.emailAddress || "",
-          travelers: 1,
-          travelDate: "",
-          contactNumber: "",
-          specialRequests: "",
-        });
-      } else {
+      if (!response.ok) {
         throw new Error("Failed to submit booking");
       }
+
+      // { message, bookingId }
+      const { bookingId } = await response.json();
+
+      // 🧾 Generate & download invoice (frontend)
+      const invoiceData = {
+        bookingId,
+        customerName: user?.fullName || user?.firstName || "Guest User",
+        customerEmail: bookingData.email,
+        packageName: packageData?.name || "",
+        destination: packageData?.destination || "",
+        duration: packageData?.duration || "",
+        date: bookingData.travelDate,
+        travelers: bookingData.travelers,
+        totalAmount: packageData.price * bookingData.travelers,
+        contactNumber: bookingData.contactNumber,
+        specialRequests: bookingData.specialRequests,
+        type: "package" as const,
+      };
+
+      const pdf = generateInvoicePDF(invoiceData);
+      pdf.save(`AFI-Travel-and-Tourism-Invoice-${bookingId}.pdf`);
+
+      // 📩 Send confirmation emails (customer + admin) — frontend via EmailJS
+      try {
+        await sendBookingEmails({
+          bookingId,
+          customerName: invoiceData.customerName,
+          customerEmail: invoiceData.customerEmail,
+          packageName: invoiceData.packageName,
+          destination: invoiceData.destination,
+          duration: invoiceData.duration,
+          date: invoiceData.date,
+          travelers: invoiceData.travelers,
+          totalAmount: invoiceData.totalAmount,
+          contactNumber: invoiceData.contactNumber,
+          specialRequests: invoiceData.specialRequests || "",
+        });
+      } catch (err) {
+        console.error("EmailJS send failed:", err);
+        // We won’t fail the booking if email sending fails; just inform softly
+        toast({
+          title: "Booking Confirmed (email pending)",
+          description:
+            "Your invoice has been downloaded. We had trouble sending the email — we’ll retry shortly.",
+        });
+      }
+
+      toast({
+        title: "Booking Confirmed! 🎉",
+        description:
+          "Your invoice has been downloaded. A confirmation email has been sent.",
+      });
+
+      setBookingOpen(false);
+      setBookingData({
+        email: user?.emailAddresses[0]?.emailAddress || "",
+        travelers: 1,
+        travelDate: "",
+        contactNumber: "",
+        specialRequests: "",
+      });
     } catch (error) {
       console.error("Error submitting booking:", error);
       toast({
@@ -328,7 +381,7 @@ export default function PackageDetailPage() {
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-          <div className="absolute inset-0 flex items-end">
+          <div className="absolute inset-0 flex items=end">
             <div className="p-8 md:p-10 text-white w-full">
               <div className="flex flex-wrap gap-2 mb-4">
                 {packageData.tags.map((tag) => (
@@ -576,147 +629,276 @@ export default function PackageDetailPage() {
 
                   <Dialog open={bookingOpen} onOpenChange={setBookingOpen}>
                     <DialogTrigger asChild>
-                      <Button className="w-full h-11 text-base font-semibold rounded-xl shadow hover:shadow-lg transition-all">
-                        Book Now
+                      <Button
+                        className="w-full h-11 text-base font-semibold rounded-xl shadow hover:shadow-lg transition-all"
+                        disabled={!user}
+                      >
+                        {user ? "Book Now" : "Sign in to Book"}
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-md rounded-2xl">
-                      <DialogHeader>
-                        <DialogTitle>Book {packageData.name}</DialogTitle>
-                        <DialogDescription>
-                          Fill in your details to book this package
-                        </DialogDescription>
-                      </DialogHeader>
-                      <form onSubmit={handleBooking} className="space-y-4">
-                        {/* Email Field */}
-                        <div>
-                          <Label
-                            htmlFor="email"
-                            className="flex items-center mb-3"
-                          >
-                            <Mail className="h-4 w-4 mr-2" />
-                            Email Address *
-                          </Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={bookingData.email}
-                            onChange={(e) =>
-                              setBookingData((prev) => ({
-                                ...prev,
-                                email: e.target.value,
-                              }))
-                            }
-                            placeholder="your.email@example.com"
-                            required
-                          />
+
+                    <DialogContent className="w-[95vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl rounded-2xl p-0 overflow-hidden">
+                      <div className="grid grid-cols-1 md:grid-cols-5">
+                        {/* Left: Form */}
+                        <div className="md:col-span-3 p-6 md:p-8">
+                          <DialogHeader className="mb-6">
+                            <DialogTitle className="text-xl md:text-2xl">
+                              Book {packageData.name}
+                            </DialogTitle>
+                            <DialogDescription className="mt-2">
+                              Fill in your details to secure your travel
+                              experience
+                            </DialogDescription>
+                          </DialogHeader>
+
+                          <form onSubmit={handleBooking} className="space-y-6">
+                            {/* Email Field */}
+                            <div className="space-y-2">
+                              <Label
+                                htmlFor="email"
+                                className="flex items-center text-sm font-medium"
+                              >
+                                <Mail className="h-4 w-4 mr-2" />
+                                Email Address *
+                              </Label>
+                              <Input
+                                id="email"
+                                type="email"
+                                value={bookingData.email}
+                                onChange={(e) =>
+                                  setBookingData((prev) => ({
+                                    ...prev,
+                                    email: e.target.value,
+                                  }))
+                                }
+                                className="h-11"
+                                placeholder="your.email@example.com"
+                                required
+                              />
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                              <div className="space-y-2">
+                                <Label
+                                  htmlFor="travelers"
+                                  className="text-sm font-medium"
+                                >
+                                  Number of Travelers *
+                                </Label>
+                                <Input
+                                  id="travelers"
+                                  type="number"
+                                  min="1"
+                                  className="h-11"
+                                  value={bookingData.travelers}
+                                  onChange={(e) =>
+                                    setBookingData((prev) => ({
+                                      ...prev,
+                                      travelers:
+                                        Number.parseInt(e.target.value) || 1,
+                                    }))
+                                  }
+                                  required
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label
+                                  htmlFor="travelDate"
+                                  className="text-sm font-medium"
+                                >
+                                  Travel Date *
+                                </Label>
+                                <Input
+                                  id="travelDate"
+                                  type="date"
+                                  className="h-11"
+                                  value={bookingData.travelDate}
+                                  onChange={(e) =>
+                                    setBookingData((prev) => ({
+                                      ...prev,
+                                      travelDate: e.target.value,
+                                    }))
+                                  }
+                                  required
+                                />
+                              </div>
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label
+                                htmlFor="contactNumber"
+                                className="text-sm font-medium"
+                              >
+                                Contact Number *
+                              </Label>
+                              <Input
+                                id="contactNumber"
+                                type="tel"
+                                className="h-11"
+                                value={bookingData.contactNumber}
+                                onChange={(e) =>
+                                  setBookingData((prev) => ({
+                                    ...prev,
+                                    contactNumber: e.target.value,
+                                  }))
+                                }
+                                placeholder="+971 50 123 4567"
+                                required
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label
+                                htmlFor="specialRequests"
+                                className="text-sm font-medium"
+                              >
+                                Special Requests (Optional)
+                              </Label>
+                              <Textarea
+                                id="specialRequests"
+                                value={bookingData.specialRequests}
+                                onChange={(e) =>
+                                  setBookingData((prev) => ({
+                                    ...prev,
+                                    specialRequests: e.target.value,
+                                  }))
+                                }
+                                className="min-h-[100px] resize-none"
+                                placeholder="Any dietary requirements, special needs, or specific preferences..."
+                              />
+                            </div>
+
+                            <div className="bg-slate-50/80 dark:bg-neutral-900/60 p-5 rounded-xl ring-1 ring-black/5 dark:ring-white/10">
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="font-medium">
+                                  Total Amount:
+                                </span>
+                                <span className="text-2xl font-bold text-sky-700 dark:text-sky-300">
+                                  {formatAED(totalAmount)}
+                                </span>
+                              </div>
+                              <p className="text-sm text-slate-600 dark:text-slate-300">
+                                {bookingData.travelers} traveler
+                                {bookingData.travelers > 1 ? "s" : ""} ×{" "}
+                                {formatAED(packageData.price)}
+                              </p>
+                              <p className="text-xs text-amber-600 dark:text-amber-500 mt-3 italic">
+                                *Final price may vary based on additional
+                                services or changes.
+                              </p>
+                            </div>
+
+                            <Button
+                              type="submit"
+                              className="w-full h-12 text-base rounded-xl font-semibold"
+                              disabled={submitting}
+                            >
+                              <Download className="h-4 w-4 mr-2" />
+                              {submitting
+                                ? "Processing..."
+                                : "Confirm Booking & Download Invoice"}
+                            </Button>
+                          </form>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label htmlFor="travelers">
-                              Number of Travelers *
-                            </Label>
-                            <Input
-                              id="travelers"
-                              type="number"
-                              min="1"
-                              value={bookingData.travelers}
-                              onChange={(e) =>
-                                setBookingData((prev) => ({
-                                  ...prev,
-                                  travelers:
-                                    Number.parseInt(e.target.value) || 1,
-                                }))
-                              }
-                              required
-                            />
+                        {/* Right: Summary */}
+                        <div className="hidden md:block md:col-span-2 bg-slate-50/80 dark:bg-neutral-900/60 p-6 md:p-8 border-l border-slate-200/80 dark:border-white/10">
+                          <h3 className="text-lg font-semibold mb-6">
+                            Booking Summary
+                          </h3>
+                          <div className="space-y-4 text-sm">
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-600 dark:text-slate-300">
+                                Package
+                              </span>
+                              <span className="font-medium text-slate-900 dark:text-slate-100">
+                                {packageData.name}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-600 dark:text-slate-300">
+                                Destination
+                              </span>
+                              <span className="font-medium text-slate-900 dark:text-slate-100">
+                                {packageData.destination}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-600 dark:text-slate-300">
+                                Duration
+                              </span>
+                              <span className="font-medium text-slate-900 dark:text-slate-100">
+                                {packageData.duration}
+                              </span>
+                            </div>
+                            <Separator />
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-600 dark:text-slate-300">
+                                Price / person
+                              </span>
+                              <span className="font-medium text-slate-900 dark:text-slate-100">
+                                {formatAED(packageData.price)}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-600 dark:text-slate-300">
+                                Travelers
+                              </span>
+                              <span className="font-medium text-slate-900 dark:text-slate-100">
+                                {bookingData.travelers}
+                              </span>
+                            </div>
+                            <Separator />
+                            <div className="flex items-center justify-between pt-2">
+                              <span className="text-slate-600 dark:text-slate-300">
+                                Total Amount
+                              </span>
+                              <span className="text-xl font-bold text-sky-700 dark:text-sky-300">
+                                {formatAED(totalAmount)}
+                              </span>
+                            </div>
                           </div>
-                          <div>
-                            <Label htmlFor="travelDate">Travel Date *</Label>
-                            <Input
-                              id="travelDate"
-                              type="date"
-                              value={bookingData.travelDate}
-                              onChange={(e) =>
-                                setBookingData((prev) => ({
-                                  ...prev,
-                                  travelDate: e.target.value,
-                                }))
-                              }
-                              required
-                            />
+
+                          <div className="mt-8 space-y-4">
+                            <div className="flex items-start gap-3 text-sm">
+                              <Check className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                              <div>
+                                <span className="font-medium block mb-1">
+                                  Instant Confirmation
+                                </span>
+                                <span className="text-slate-600 dark:text-slate-300">
+                                  Receive your booking confirmation and invoice
+                                  immediately
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-3 text-sm">
+                              <Check className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                              <div>
+                                <span className="font-medium block mb-1">
+                                  Secure Payment
+                                </span>
+                                <span className="text-slate-600 dark:text-slate-300">
+                                  Your payment information is processed securely
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <Label htmlFor="contactNumber">
-                            Contact Number *
-                          </Label>
-                          <Input
-                            id="contactNumber"
-                            type="tel"
-                            value={bookingData.contactNumber}
-                            onChange={(e) =>
-                              setBookingData((prev) => ({
-                                ...prev,
-                                contactNumber: e.target.value,
-                              }))
-                            }
-                            placeholder="+971 50 123 4567"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="specialRequests">
-                            Special Requests (Optional)
-                          </Label>
-                          <Textarea
-                            id="specialRequests"
-                            value={bookingData.specialRequests}
-                            onChange={(e) =>
-                              setBookingData((prev) => ({
-                                ...prev,
-                                specialRequests: e.target.value,
-                              }))
-                            }
-                            rows={3}
-                            placeholder="Any special requirements or requests..."
-                          />
-                        </div>
-                        <div className="bg-slate-50 dark:bg-neutral-800 p-4 rounded-xl ring-1 ring-black/5 dark:ring-white/10">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium">Total Amount:</span>
-                            <span className="text-xl font-bold text-sky-700 dark:text-sky-300">
-                              {formatAED(totalAmount)}
-                            </span>
-                          </div>
-                          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-                            {bookingData.travelers} traveler
-                            {bookingData.travelers > 1 ? "s" : ""} ×{" "}
-                            {formatAED(packageData.price)}
-                          </p>
-                          <p className="text-xs text-amber-600 mt-2 italic">
-                            *Price may differ during final payment processing.
-                          </p>
-                        </div>
-                        <Button
-                          type="submit"
-                          className="w-full h-11 rounded-xl font-semibold"
-                          disabled={submitting}
-                        >
-                          <Download className="h-4 w-4 mr-2" />
-                          {submitting
-                            ? "Processing..."
-                            : "Confirm Booking & Download Invoice"}
-                        </Button>
-                      </form>
+                      </div>
                     </DialogContent>
                   </Dialog>
 
+                  {!user && (
+                    <p className="text-xs text-center text-slate-500">
+                      Please sign in to book.
+                    </p>
+                  )}
+
                   <p className="text-xs text-slate-500 text-center">
                     By booking, you agree to our terms and conditions. Your
-                    invoice will be automatically downloaded and confirmation
-                    emails will be sent.
+                    invoice will be automatically downloaded and a confirmation
+                    email will be sent.
                   </p>
                 </CardContent>
               </Card>
