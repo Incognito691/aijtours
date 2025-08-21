@@ -1,18 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/mongodb";
 
-async function getId(context: { params: Promise<{ id: string }> }) {
-  const { id } = await context.params;
-  return id;
-}
-
 // GET a single package by ID
 export async function GET(
-  request: Request,
-  context: { params: Promise<{ id: string }> }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
-  const id = await getId(context);
+  const { id } = context.params;
 
   try {
     const client = await clientPromise;
@@ -28,7 +23,7 @@ export async function GET(
 
     return NextResponse.json(packageData, { status: 200 });
   } catch (error) {
-    console.error("Error fetching package:", error);
+    console.error("❌ Error fetching package:", error);
     return NextResponse.json(
       { error: "Failed to fetch package" },
       { status: 500 }
@@ -38,10 +33,10 @@ export async function GET(
 
 // UPDATE package by ID
 export async function PUT(
-  request: Request,
-  context: { params: Promise<{ id: string }> }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
-  const id = await getId(context);
+  const { id } = context.params;
 
   try {
     const body = await request.json();
@@ -87,7 +82,7 @@ export async function PUT(
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error updating package:", error);
+    console.error("❌ Error updating package:", error);
     return NextResponse.json(
       { error: "Failed to update package" },
       { status: 500 }
@@ -97,10 +92,10 @@ export async function PUT(
 
 // DELETE package by ID
 export async function DELETE(
-  request: Request,
-  context: { params: Promise<{ id: string }> }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
-  const id = await getId(context);
+  const { id } = context.params;
 
   try {
     const client = await clientPromise;
@@ -119,7 +114,7 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error deleting package:", error);
+    console.error("❌ Error deleting package:", error);
     return NextResponse.json(
       { error: "Failed to delete package" },
       { status: 500 }

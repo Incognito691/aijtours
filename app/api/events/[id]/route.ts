@@ -1,87 +1,106 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getDatabase } from "@/lib/mongodb"
-import { ObjectId } from "mongodb"
+import { NextRequest, NextResponse } from "next/server";
+import { getDatabase } from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+// GET single event
+export async function GET(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
   try {
-    const { id } = await params
+    const { id } = context.params;
 
     if (!ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "Invalid event ID" }, { status: 400 })
+      return NextResponse.json({ error: "Invalid event ID" }, { status: 400 });
     }
 
-    const db = await getDatabase()
+    const db = await getDatabase();
     const eventData = await db.collection("events").findOne({
       _id: new ObjectId(id),
-    })
+    });
 
     if (!eventData) {
-      return NextResponse.json({ error: "Event not found" }, { status: 404 })
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
     }
 
-    // Convert ObjectId to string to match your Event interface
-    const responseData = {
+    return NextResponse.json({
       ...eventData,
-      _id: eventData._id.toString(),
-    }
-
-    return NextResponse.json(responseData)
+      _id: eventData._id.toString(), // normalize ObjectId
+    });
   } catch (error) {
-    console.error("Error fetching event:", error)
-    return NextResponse.json({ error: "Failed to fetch event" }, { status: 500 })
+    console.error("❌ Error fetching event:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch event" },
+      { status: 500 }
+    );
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+// PUT update event
+export async function PUT(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
   try {
-    const { id } = await params
-    const body = await request.json()
+    const { id } = context.params;
+    const body = await request.json();
 
     if (!ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "Invalid event ID" }, { status: 400 })
+      return NextResponse.json({ error: "Invalid event ID" }, { status: 400 });
     }
 
-    const db = await getDatabase()
-
+    const db = await getDatabase();
     const updateData = {
       ...body,
       date: new Date(body.date),
       updatedAt: new Date(),
-    }
+    };
 
-    const result = await db.collection("events").updateOne({ _id: new ObjectId(id) }, { $set: updateData })
+    const result = await db
+      .collection("events")
+      .updateOne({ _id: new ObjectId(id) }, { $set: updateData });
 
     if (result.matchedCount === 0) {
-      return NextResponse.json({ error: "Event not found" }, { status: 404 })
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ _id: id, ...updateData })
+    return NextResponse.json({ _id: id, ...updateData });
   } catch (error) {
-    console.error("Error updating event:", error)
-    return NextResponse.json({ error: "Failed to update event" }, { status: 500 })
+    console.error("❌ Error updating event:", error);
+    return NextResponse.json(
+      { error: "Failed to update event" },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+// DELETE event
+export async function DELETE(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
   try {
-    const { id } = await params
+    const { id } = context.params;
 
     if (!ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "Invalid event ID" }, { status: 400 })
+      return NextResponse.json({ error: "Invalid event ID" }, { status: 400 });
     }
 
-    const db = await getDatabase()
+    const db = await getDatabase();
     const result = await db.collection("events").deleteOne({
       _id: new ObjectId(id),
-    })
+    });
 
     if (result.deletedCount === 0) {
-      return NextResponse.json({ error: "Event not found" }, { status: 404 })
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Event deleted successfully" })
+    return NextResponse.json({ message: "Event deleted successfully" });
   } catch (error) {
-    console.error("Error deleting event:", error)
-    return NextResponse.json({ error: "Failed to delete event" }, { status: 500 })
+    console.error("❌ Error deleting event:", error);
+    return NextResponse.json(
+      { error: "Failed to delete event" },
+      { status: 500 }
+    );
   }
 }
