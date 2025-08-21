@@ -1,0 +1,18 @@
+echo '-----------------------------------------------------------------------'
+echo '-- :building_construction::construction_worker: Building your project before committing                         --'
+echo '-----------------------------------------------------------------------'
+# Start the build process
+npm run build ||
+(
+    echo '----------------------------------------------------------------------'
+    echo ':x::boom: Build Failed!'
+    echo 'Please review the errors above to identify what went wrong.'
+    echo 'Open your code editor, fix the issues, add changes and try to commit again.'
+    echo 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    false
+)
+# If build passes
+echo ' ------------------------------------------------------------'
+echo '|        :white_check_mark::white_check_mark::white_check_mark::white_check_mark: Yeppie, build successful!!                    |'
+echo '|        :grin::hugging_face: Your changes are being pushed!! :+1::+1:     |'
+echo ' ------------------------------------------------------------'
