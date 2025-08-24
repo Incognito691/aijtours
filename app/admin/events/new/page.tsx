@@ -67,15 +67,15 @@ export default function NewEventPage() {
 
       if (response.ok) {
         toast({
-          title: "Event created!",
-          description: "The new event has been successfully created.",
+          title: "Activity created!",
+          description: "The new activity has been successfully created.",
         });
         router.push("/admin/events");
       } else {
-        throw new Error("Failed to create event");
+        throw new Error("Failed to create activity");
       }
     } catch (error) {
-      console.error("Error creating event:", error);
+      console.error("Error creating activity:", error);
       toast({
         title: "Error",
         description: "Failed to create event. Please try again.",
@@ -138,10 +138,12 @@ export default function NewEventPage() {
             className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-2"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Events
+            Back to Activities
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Create New Event</h1>
-          <p className="text-gray-600">Add a new travel event</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Create New Activities
+          </h1>
+          <p className="text-gray-600">Add a new travel activity</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -149,11 +151,13 @@ export default function NewEventPage() {
           <Card>
             <CardHeader>
               <CardTitle>Event Information</CardTitle>
-              <CardDescription>Enter the details of the event</CardDescription>
+              <CardDescription>
+                Enter the details of the activity
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="name">Event Name *</Label>
+                <Label htmlFor="name">Activity Name *</Label>
                 <Input
                   id="name"
                   name="name"
@@ -178,7 +182,7 @@ export default function NewEventPage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="price">Price (USD) *</Label>
+                  <Label htmlFor="price">Price (AED) *</Label>
                   <Input
                     id="price"
                     name="price"
@@ -225,7 +229,7 @@ export default function NewEventPage() {
             <CardHeader>
               <CardTitle>Tags</CardTitle>
               <CardDescription>
-                Add tags to categorize your event
+                Add tags to categorize your activity
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -266,7 +270,7 @@ export default function NewEventPage() {
           <Card>
             <CardHeader>
               <CardTitle>Images</CardTitle>
-              <CardDescription>Upload images for the event</CardDescription>
+              <CardDescription>Upload images for the activity</CardDescription>
             </CardHeader>
             <CardContent>
               <ImageUpload

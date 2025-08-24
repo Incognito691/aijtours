@@ -77,75 +77,147 @@ export default function HomePage() {
       <Navbar />
 
       {/* Hero Section with Video */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden rounded-b-[3rem]">
-        <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            muted
-            loop
-            className="w-full h-full object-cover"
-            poster="/placeholder.svg?height=1080&width=1920"
-          >
-            <source src="/video/landing-cinematic.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
-        </div>
 
-        <div className="relative z-10 text-center text-white max-w-5xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="backdrop-blur-sm bg-white/5 rounded-3xl p-8 border border-white/10"
-          >
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-            >
-              Your Dream Journey
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
-                Awaits You
-              </span>
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-lg md:text-xl lg:text-2xl mb-8 text-white/90 font-light"
-            >
-              Discover extraordinary destinations with our handcrafted travel
-              experiences
-            </motion.p>
+      <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-80px)]">
+            {/* Left Content */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
             >
-              <Link href="/packages">
-                <Button
-                  size="lg"
-                  className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-10 py-4 text-lg rounded-full shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105"
+              <div className="space-y-6">
+                <div className="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+                  <Star className="h-4 w-4 mr-2" />
+                  #1 Travel Agency in UAE
+                </div>
+
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight"
                 >
-                  <Plane className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-                  Explore Destinations
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="group border-2 border-white/40 text-white hover:bg-white hover:text-gray-900 px-10 py-4 text-lg rounded-full bg-white/10 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                  Your Dream Journey
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600 mt-2">
+                    Awaits You
+                  </span>
+                </motion.h1>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-lg"
                 >
-                  Plan My Trip
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-              </Link>
+                  Discover extraordinary destinations with our handcrafted
+                  travel experiences. From exotic beaches to cultural cities, we
+                  make every journey unforgettable.
+                </motion.p>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="flex flex-col sm:flex-row gap-4"
+              >
+                <Link href="/packages">
+                  <Button
+                    size="lg"
+                    className="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  >
+                    <Plane className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
+                    Explore Destinations
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                  </Button>
+                </Link>
+                <Link href="/contact">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="group border-2 border-blue-200 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 text-lg rounded-xl transition-all duration-300 hover:scale-105"
+                  >
+                    Plan My Trip
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                  </Button>
+                </Link>
+              </motion.div>
+
+              {/* Stats */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="flex items-center gap-8 pt-6"
+              >
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gray-900">100+</div>
+                  <div className="text-sm text-gray-600">Happy Travelers</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gray-900">20+</div>
+                  <div className="text-sm text-gray-600">Destinations</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gray-900">24/7</div>
+                  <div className="text-sm text-gray-600">Support</div>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
+
+            {/* Right Content - Hero Image/Video */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative"
+            >
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  className="w-full h-[600px] object-cover"
+                  poster="/placeholder.svg?height=600&width=800"
+                >
+                  <source src="/video/landing-cinematic.mp4" type="video/mp4" />
+                </video>
+
+                {/* Floating Cards */}
+                <div className="absolute top-8 left-8 bg-white rounded-xl p-4 shadow-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="bg-green-100 p-2 rounded-lg">
+                      <MapPin className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">Dubai</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="absolute bottom-8 right-8 bg-white rounded-xl p-4 shadow-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="bg-blue-100 p-2 rounded-lg">
+                      <Calendar className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">
+                        Book Now
+                      </div>
+                      <div className="text-sm text-gray-600">Best Prices</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Decorative Elements */}
+              <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full opacity-20"></div>
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-orange-400 to-pink-400 rounded-full opacity-20"></div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -178,12 +250,13 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="h-full" // This ensures the motion div takes full height
                 >
-                  <Card className="group overflow-hidden transition-all duration-500 rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl hover:shadow-2xl hover:bg-white/15 hover:border-white/30 hover:scale-[1.02] relative">
+                  <Card className="group overflow-hidden transition-all duration-500 rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl hover:shadow-2xl hover:bg-white/15 hover:border-white/30 hover:scale-[1.02] relative h-full flex flex-col">
                     {/* Subtle gradient overlay for depth */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl pointer-events-none" />
 
-                    <div className="relative h-72 overflow-hidden rounded-t-3xl">
+                    <div className="relative h-72 overflow-hidden rounded-t-3xl flex-shrink-0">
                       <Image
                         src={
                           pkg.images[0] ||
@@ -206,67 +279,53 @@ export default function HomePage() {
                       <div className="absolute top-4 right-4">
                         <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
                           <span className="text-base font-semibold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                            From AED {pkg.price}
+                            AED {pkg.price}
                           </span>
                         </div>
-                      </div>
-
-                      {/* Tags with new design */}
-                      <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                        {pkg.tags?.map((tag: string) => (
-                          <span
-                            key={tag}
-                            className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700"
-                          >
-                            {tag}
-                          </span>
-                        ))}
                       </div>
                     </div>
 
-                    <CardHeader className="pb-3 relative z-10">
-                      <CardTitle className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-                        {pkg.name}
-                      </CardTitle>
-                      <CardDescription className="flex items-center text-gray-600 mt-2">
-                        <MapPin className="h-4 w-4 mr-2 text-blue-500" />
-                        {pkg.destination}
-                      </CardDescription>
-                    </CardHeader>
-
-                    <CardContent className="pt-0 relative z-10">
-                      <div className="flex items-center gap-6 mb-4">
-                        <div className="flex items-center text-sm text-gray-700">
-                          <Calendar className="h-4 w-4 mr-2 text-blue-500" />
-                          <span className="font-medium">{pkg.duration}</span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-700">
-                          <Users className="h-4 w-4 mr-2 text-blue-500" />
-                          <span className="font-medium">
-                            {pkg.categoryName}
+                    <div className="flex flex-col flex-grow">
+                      <CardHeader className="pb-3 relative z-10 flex-shrink-0">
+                        <CardTitle className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2 min-h-[3.5rem]">
+                          {pkg.name}
+                        </CardTitle>
+                        <CardDescription className="flex items-center text-gray-600 mt-2">
+                          <MapPin className="h-4 w-4 mr-2 text-blue-500 flex-shrink-0" />
+                          <span className="line-clamp-1">
+                            {pkg.destination}
                           </span>
-                        </div>
-                      </div>
+                        </CardDescription>
+                      </CardHeader>
 
-                      <p className="text-gray-600 mb-6 line-clamp-2 leading-relaxed">
-                        {pkg.description}
-                      </p>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center text-amber-500">
-                          <Star className="h-5 w-5 fill-current" />
-                          <span className="ml-1 text-sm font-medium">
-                            {pkg.rating || "4.5"}
-                          </span>
+                      <CardContent className="pt-0 relative z-10 flex flex-col flex-grow">
+                        <div className="flex items-center gap-6 mb-4 flex-shrink-0">
+                          <div className="flex items-center text-sm text-gray-700">
+                            <Calendar className="h-4 w-4 mr-2 text-blue-500" />
+                            <span className="font-medium">{pkg.duration}</span>
+                          </div>
+                          <div className="flex items-center text-sm text-gray-700">
+                            <Users className="h-4 w-4 mr-2 text-blue-500" />
+                            <span className="font-medium">
+                              {pkg.categoryName}
+                            </span>
+                          </div>
                         </div>
-                        <Link href={`/packages/${pkg._id}`}>
-                          <Button className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
-                            Explore Package
-                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </CardContent>
+
+                        <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed flex-grow min-h-[4.5rem]">
+                          {pkg.description}
+                        </p>
+
+                        <div className="flex items-center justify-center flex-shrink-0 mt-auto">
+                          <Link href={`/packages/${pkg._id}`}>
+                            <Button className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
+                              Explore Package
+                              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                            </Button>
+                          </Link>
+                        </div>
+                      </CardContent>
+                    </div>
                   </Card>
                 </motion.div>
               ))}
@@ -670,8 +729,8 @@ export default function HomePage() {
                 <div className="text-sm">Satisfaction</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">15+</div>
-                <div className="text-sm">Years Trust</div>
+                <div className="text-2xl font-bold text-white mb-1">1+</div>
+                <div className="text-sm">Year Trust</div>
               </div>
             </div>
           </motion.div>

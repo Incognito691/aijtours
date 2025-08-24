@@ -124,7 +124,7 @@ export default function PackagesPage() {
       <section className="relative py-20 md:py-24 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/images/packages-hero.jpg"
+            src="/images/packages-hero.jpeg"
             alt="Travel Packages"
             fill
             priority
