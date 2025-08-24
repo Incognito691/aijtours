@@ -13,25 +13,17 @@ const poppins = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "AFI Travel and Tourism - Travel & Tours",
+  title: "AFI Travel & Tourism – Frame your space",
   description:
-    "Discover amazing travel packages and destinations with AFI Travel and Tourism",
-  keywords: [
-    "travel",
-    "holidays",
-    "tours",
-    "vacation packages",
-    "destinations",
-    "adventure travel",
-  ],
-  authors: [{ name: "AFI Travel and Tourism" }],
-  creator: "AFI Travel and Tourism",
-  publisher: "AFI Travel and Tourism",
+    "Discover amazing travel packages and destinations with AFI Travel & Tourism.",
+  authors: [{ name: "AFI Travel & Tourism" }],
+  creator: "AFI Travel & Tourism",
+  publisher: "AFI Travel & Tourism",
   robots: "index, follow",
   openGraph: {
-    title: "AFI Travel and Tourism - Travel & Tours",
+    title: "AFI Travel & Tourism – Frame your space",
     description:
-      "Discover amazing travel packages and destinations with AFI Travel and Tourism",
+      "Discover amazing travel packages and destinations with AFI Travel & Tourism.",
     type: "website",
   },
 };

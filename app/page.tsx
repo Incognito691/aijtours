@@ -80,15 +80,11 @@ export default function HomePage() {
 
       <section className="relative h-screen flex items-center justify-center overflow-hidden rounded-b-[3rem]">
         <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            muted
-            loop
+          <img
+            src="/images/hero-loading.png"
+            alt="Background"
             className="w-full h-full object-cover"
-            poster="/images/hero-loading.png"
-          >
-            <source src="/video/landing-cinematic.mp4" type="video/mp4" />
-          </video>
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         </div>
 
