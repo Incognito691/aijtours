@@ -291,7 +291,7 @@ export default function EventsPage() {
                         <MapPin className="h-4 w-4 text-emerald-600" />
                         {event.location}
                       </span>
-                      {/* <span className="inline-flex items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1.5">
                         <Calendar className="h-4 w-4 text-amber-600" />
                         {new Date(event.date).toLocaleDateString("en-US", {
                           weekday: "short",
@@ -299,7 +299,7 @@ export default function EventsPage() {
                           month: "short",
                           day: "numeric",
                         })}
-                      </span> */}
+                      </span>
                     </div>
 
                     {/* Actions */}
