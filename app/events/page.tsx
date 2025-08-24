@@ -90,7 +90,7 @@ export default function EventsPage() {
         <div className="absolute inset-0">
           <Image
             src="/images/events-dubai.jpg"
-            alt="Events"
+            alt="Activities"
             fill
             priority
             className="object-cover"
@@ -108,19 +108,19 @@ export default function EventsPage() {
             <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-full px-5 py-2.5 mb-6 border border-white/20">
               <Sparkles className="h-4 w-4 text-blue-200" />
               <span className="text-white/90 text-sm font-medium">
-                Discover Amazing Events
+                Discover Amazing Activity
               </span>
             </div>
 
             <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
               Travel{" "}
               <span className="bg-gradient-to-r from-amber-300 via-pink-300 to-violet-300 bg-clip-text text-transparent">
-                Events
+                Activities
               </span>
             </h1>
 
             <p className="mt-4 text-lg text-blue-100/90">
-              Join us for exciting travel events, workshops, and unique
+              Join us for exciting travel activities, workshops, and unique
               experiences that will create memories to last a lifetime.
             </p>
 
@@ -129,7 +129,7 @@ export default function EventsPage() {
               {[
                 {
                   number: filteredEvents.length.toString(),
-                  label: "Events",
+                  label: "Activity",
                   icon: Calendar,
                 },
                 {
@@ -172,7 +172,7 @@ export default function EventsPage() {
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
                   <Input
-                    placeholder="Search events, locations, or descriptions…"
+                    placeholder="Search activities, locations, or descriptions…"
                     value={searchTerm}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setSearchTerm(e.target.value)
@@ -191,8 +191,8 @@ export default function EventsPage() {
                 <div className="flex items-center justify-between md:justify-center gap-3 bg-white/70 backdrop-blur-xl rounded-xl px-4 py-3 border border-white/60">
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-sm font-medium text-gray-700">
-                    {filteredEvents.length} event
-                    {filteredEvents.length !== 1 ? "s" : ""} found
+                    {filteredEvents.length} activit
+                    {filteredEvents.length !== 1 ? "ies" : "y"} found
                   </span>
                 </div>
               </div>

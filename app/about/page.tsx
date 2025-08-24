@@ -1020,7 +1020,7 @@ export default function AboutPage() {
                 <div className="text-sm">Satisfaction</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">15+</div>
+                <div className="text-2xl font-bold text-white mb-1">1+</div>
                 <div className="text-sm">Years Trust</div>
               </div>
             </div>
