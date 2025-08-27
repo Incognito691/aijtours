@@ -6,13 +6,14 @@ import type { Booking } from "@/lib/models";
 // GET single booking
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
     const db = await getDatabase();
     const booking = await db
       .collection<Booking>("bookings")
-      .findOne({ _id: new ObjectId(context.params.id) });
+      .findOne({ _id: new ObjectId(id) });
 
     if (!booking) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
@@ -28,14 +29,15 @@ export async function GET(
 // PUT update booking
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
     const db = await getDatabase();
     const body = await request.json();
 
     const result = await db.collection<Booking>("bookings").updateOne(
-      { _id: new ObjectId(context.params.id) },
+      { _id: new ObjectId(id) },
       { $set: { ...body, updatedAt: new Date() } }
     );
 
@@ -49,12 +51,13 @@ export async function PUT(
 // DELETE booking
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
     const db = await getDatabase();
     const result = await db.collection<Booking>("bookings").deleteOne({
-      _id: new ObjectId(context.params.id),
+      _id: new ObjectId(id),
     });
 
     return NextResponse.json({ success: result.deletedCount > 0 });

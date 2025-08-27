@@ -5,10 +5,10 @@ import clientPromise from "@/lib/mongodb"
 // GET event by ID
 export async function GET(
   request: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const client = await clientPromise;
     const db = client.db("afisales");
 
@@ -28,10 +28,10 @@ export async function GET(
 // UPDATE event by ID
 export async function PUT(
   request: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const body = await request.json();
 
     const client = await clientPromise;
@@ -55,10 +55,10 @@ export async function PUT(
 // DELETE event by ID
 export async function DELETE(
   request: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const client = await clientPromise;
     const db = client.db("afisales");
 
