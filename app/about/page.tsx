@@ -46,7 +46,7 @@ export default function AboutPage() {
     {
       icon: Award,
       label: "Years of Excellence",
-      value: "1+",
+      value: "15+",
       color: "from-purple-500 to-indigo-500",
       bgColor: "bg-purple-50",
     },
@@ -177,15 +177,12 @@ export default function AboutPage() {
 
       {/* Hero Section with Interactive Elements */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900">
-        {/* Enhanced Dynamic Background Elements */}
+        {/* Dynamic Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[length:32px_32px]"></div>
-          {/* More Animated Circles for depth */}
+          {/* Animated Circles */}
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/3 right-1/3 w-48 h-48 bg-cyan-500/8 rounded-full blur-2xl animate-pulse delay-500"></div>
-          <div className="absolute bottom-1/3 left-1/3 w-48 h-48 bg-indigo-500/8 rounded-full blur-2xl animate-pulse delay-1500"></div>
-          <div className="absolute top-1/2 left-1/6 w-32 h-32 bg-pink-500/8 rounded-full blur-xl animate-pulse delay-2000"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6">
@@ -196,7 +193,7 @@ export default function AboutPage() {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="mb-8"
             >
-              <div className="inline-flex items-center bg-white/10 rounded-full px-6 py-3 backdrop-blur-sm border border-white/20">
+              <div className="inline-flex items-center bg-white/10 rounded-full px-6 py-3">
                 <Compass className="h-6 w-6 text-cyan-400 mr-3" />
                 <span className="text-lg font-medium text-white">
                   Established 2024
@@ -227,300 +224,61 @@ export default function AboutPage() {
               new horizons. Join us in creating memories that last a lifetime.
             </motion.p>
 
-            {/* Enhanced Interactive Travel Highlights */}
+            {/* Interactive Features Grid */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8 }}
-              className="max-w-5xl mx-auto"
+              className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto"
             >
-              {/* Enhanced Animated Travel Icons with More Variety */}
-              <div className="relative h-40 mb-8 overflow-hidden">
-                {[
-                  // Original icons
-                  {
-                    icon: "✈️",
-                    delay: 0,
-                    x: "10%",
-                    y: "20%",
-                    size: "text-4xl",
-                  },
-                  {
-                    icon: "🏔️",
-                    delay: 1,
-                    x: "25%",
-                    y: "60%",
-                    size: "text-4xl",
-                  },
-                  {
-                    icon: "🏝️",
-                    delay: 2,
-                    x: "45%",
-                    y: "30%",
-                    size: "text-4xl",
-                  },
-                  {
-                    icon: "🗼",
-                    delay: 0.5,
-                    x: "65%",
-                    y: "70%",
-                    size: "text-4xl",
-                  },
-                  {
-                    icon: "🚢",
-                    delay: 1.5,
-                    x: "80%",
-                    y: "40%",
-                    size: "text-4xl",
-                  },
-                  {
-                    icon: "🎒",
-                    delay: 2.5,
-                    x: "35%",
-                    y: "10%",
-                    size: "text-4xl",
-                  },
-                  {
-                    icon: "📸",
-                    delay: 3,
-                    x: "70%",
-                    y: "15%",
-                    size: "text-4xl",
-                  },
-                  {
-                    icon: "🌍",
-                    delay: 0.8,
-                    x: "15%",
-                    y: "75%",
-                    size: "text-4xl",
-                  },
-
-                  // New additional icons for more richness
-                  {
-                    icon: "🚁",
-                    delay: 1.2,
-                    x: "5%",
-                    y: "45%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🏖️",
-                    delay: 2.8,
-                    x: "55%",
-                    y: "85%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🎡",
-                    delay: 1.8,
-                    x: "90%",
-                    y: "20%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🚂",
-                    delay: 3.2,
-                    x: "20%",
-                    y: "35%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🏰",
-                    delay: 0.3,
-                    x: "85%",
-                    y: "65%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🎭",
-                    delay: 2.2,
-                    x: "40%",
-                    y: "80%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🍜",
-                    delay: 1.7,
-                    x: "75%",
-                    y: "50%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🎪",
-                    delay: 3.5,
-                    x: "12%",
-                    y: "15%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🚠",
-                    delay: 0.7,
-                    x: "60%",
-                    y: "5%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🏛️",
-                    delay: 2.1,
-                    x: "30%",
-                    y: "55%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🎨",
-                    delay: 1.4,
-                    x: "8%",
-                    y: "65%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🌺",
-                    delay: 2.7,
-                    x: "88%",
-                    y: "35%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🚤",
-                    delay: 0.9,
-                    x: "50%",
-                    y: "65%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🎷",
-                    delay: 3.1,
-                    x: "22%",
-                    y: "90%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🗺️",
-                    delay: 1.6,
-                    x: "78%",
-                    y: "8%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🦋",
-                    delay: 2.4,
-                    x: "42%",
-                    y: "48%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🎋",
-                    delay: 0.4,
-                    x: "95%",
-                    y: "75%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🌸",
-                    delay: 1.9,
-                    x: "38%",
-                    y: "22%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🎯",
-                    delay: 2.9,
-                    x: "68%",
-                    y: "88%",
-                    size: "text-3xl",
-                  },
-                  {
-                    icon: "🚡",
-                    delay: 0.6,
-                    x: "18%",
-                    y: "52%",
-                    size: "text-3xl",
-                  },
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0, rotate: -180 }}
-                    animate={{
-                      opacity: [0, 1, 0.8, 1],
-                      scale: [0, 1.2, 0.9, 1],
-                      rotate: 0,
-                      y: [0, -10, 0],
-                    }}
-                    transition={{
-                      delay: item.delay,
-                      duration: 0.8,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      repeatDelay: 5,
-                      y: {
-                        duration: 3,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                        ease: "easeInOut",
-                      },
-                    }}
-                    className={`absolute ${item.size} cursor-pointer hover:scale-125 transition-transform duration-300`}
-                    style={{
-                      left: item.x,
-                      top: item.y,
-                      filter: "drop-shadow(0 0 8px rgba(255,255,255,0.3))",
-                    }}
-                    whileHover={{
-                      scale: 1.3,
-                      rotate: 360,
-                      transition: { duration: 0.3 },
-                    }}
-                  >
-                    {item.icon}
-                  </motion.div>
-                ))}
-
-                {/* Floating particles for extra magic */}
-                {[...Array(12)].map((_, i) => {
-                  // Use deterministic values based on index to avoid hydration issues
-                  const positions = [
-                    { left: "15%", top: "20%", moveX: 80, moveY: -60 },
-                    { left: "85%", top: "30%", moveX: -70, moveY: 90 },
-                    { left: "25%", top: "70%", moveX: 120, moveY: -40 },
-                    { left: "70%", top: "15%", moveX: -90, moveY: 110 },
-                    { left: "45%", top: "85%", moveX: 60, moveY: -80 },
-                    { left: "10%", top: "50%", moveX: 140, moveY: 30 },
-                    { left: "90%", top: "60%", moveX: -110, moveY: -70 },
-                    { left: "35%", top: "25%", moveX: 90, moveY: 100 },
-                    { left: "65%", top: "75%", moveX: -60, moveY: -90 },
-                    { left: "20%", top: "40%", moveX: 100, moveY: 50 },
-                    { left: "80%", top: "80%", moveX: -80, moveY: -60 },
-                    { left: "50%", top: "10%", moveX: 70, moveY: 120 },
-                  ];
-                  const pos = positions[i];
-
-                  return (
-                    <motion.div
-                      key={`particle-${i}`}
-                      className="absolute w-1 h-1 bg-white/40 rounded-full"
-                      initial={{ opacity: 0 }}
-                      animate={{
-                        opacity: [0, 1, 0],
-                        x: [0, pos.moveX],
-                        y: [0, pos.moveY],
-                      }}
-                      transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        delay: i * 0.5,
-                        ease: "easeOut",
-                      }}
-                      style={{
-                        left: pos.left,
-                        top: pos.top,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-
-              {/* Interactive Action Buttons with Hover Effects */}
+              {[
+                {
+                  icon: Globe,
+                  value: "50+",
+                  label: "Destinations",
+                  color: "from-blue-400 to-cyan-400",
+                },
+                {
+                  icon: Users,
+                  value: "10K+",
+                  label: "Happy Travelers",
+                  color: "from-purple-400 to-pink-400",
+                },
+                {
+                  icon: Award,
+                  value: "15+",
+                  label: "Years Experience",
+                  color: "from-green-400 to-emerald-400",
+                },
+                {
+                  icon: Heart,
+                  value: "99%",
+                  label: "Satisfaction",
+                  color: "from-red-400 to-rose-400",
+                },
+              ].map((feature, index) => (
+                <motion.div
+                  key={feature.label}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className="relative group"
+                >
+                  <div className="relative p-6 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300">
+                    <div
+                      className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.color} mb-4`}
+                    >
+                      <feature.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {feature.value}
+                    </div>
+                    <div className="text-sm text-blue-100">{feature.label}</div>
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
+
+            {/* Decorative Elements */}
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"></div>
           </div>
         </div>
       </section>
@@ -700,7 +458,7 @@ export default function AboutPage() {
                     generations.
                   </p>
                   <div className="mt-6 flex items-center text-blue-600 font-medium group-hover:text-blue-700 transition-colors duration-300">
-                    <span>Inspiring journeys since 2019</span>
+                    <span>Inspiring journeys since 2008</span>
                     <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                   </div>
                 </CardContent>
@@ -1020,7 +778,7 @@ export default function AboutPage() {
                 <div className="text-sm">Satisfaction</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">1+</div>
+                <div className="text-2xl font-bold text-white mb-1">15+</div>
                 <div className="text-sm">Years Trust</div>
               </div>
             </div>

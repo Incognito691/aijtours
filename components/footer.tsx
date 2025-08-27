@@ -275,8 +275,7 @@ export default function Footer() {
                             Visit Us
                           </p>
                           <p className="text-gray-600 dark:text-gray-400">
-                            C101, 1st Floor - Al Bateen Tower (Abu Dhabi Islamic
-                            Bank)
+                            Abu Dhabi, UAE
                           </p>
                         </div>
                       </div>

@@ -77,15 +77,18 @@ export default function HomePage() {
       <Navbar />
 
       {/* Hero Section with Video */}
-
       <section className="relative h-screen flex items-center justify-center overflow-hidden rounded-b-[3rem]">
         <div className="absolute inset-0 z-0">
-          <img
-            src="/images/hero-loading.png"
-            alt="Background"
+          <video
+            autoPlay
+            muted
+            loop
             className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+            poster="/placeholder.svg?height=1080&width=1920"
+          >
+            <source src="/video/landing-cinematic.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
         </div>
 
         <div className="relative z-10 text-center text-white max-w-5xl mx-auto px-6">
@@ -93,7 +96,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className="p-8"
+            className="backdrop-blur-sm bg-white/5 rounded-3xl p-8 border border-white/10"
           >
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
@@ -106,7 +109,6 @@ export default function HomePage() {
                 Awaits You
               </span>
             </motion.h1>
-
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -116,7 +118,6 @@ export default function HomePage() {
               Discover extraordinary destinations with our handcrafted travel
               experiences
             </motion.p>
-
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -133,7 +134,6 @@ export default function HomePage() {
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
               </Link>
-
               <Link href="/contact">
                 <Button
                   size="lg"
@@ -178,13 +178,12 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="h-full" // This ensures the motion div takes full height
                 >
-                  <Card className="group overflow-hidden transition-all duration-500 rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl hover:shadow-2xl hover:bg-white/15 hover:border-white/30 hover:scale-[1.02] relative h-full flex flex-col">
+                  <Card className="group overflow-hidden transition-all duration-500 rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl hover:shadow-2xl hover:bg-white/15 hover:border-white/30 hover:scale-[1.02] relative">
                     {/* Subtle gradient overlay for depth */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl pointer-events-none" />
 
-                    <div className="relative h-72 overflow-hidden rounded-t-3xl flex-shrink-0">
+                    <div className="relative h-72 overflow-hidden rounded-t-3xl">
                       <Image
                         src={
                           pkg.images[0] ||
@@ -207,53 +206,67 @@ export default function HomePage() {
                       <div className="absolute top-4 right-4">
                         <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
                           <span className="text-base font-semibold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                            AED {pkg.price}
+                            From AED {pkg.price}
                           </span>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex flex-col flex-grow">
-                      <CardHeader className="pb-3 relative z-10 flex-shrink-0">
-                        <CardTitle className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2 min-h-[3.5rem]">
-                          {pkg.name}
-                        </CardTitle>
-                        <CardDescription className="flex items-center text-gray-600 mt-2">
-                          <MapPin className="h-4 w-4 mr-2 text-blue-500 flex-shrink-0" />
-                          <span className="line-clamp-1">
-                            {pkg.destination}
+                      {/* Tags with new design */}
+                      <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                        {pkg.tags?.map((tag: string) => (
+                          <span
+                            key={tag}
+                            className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700"
+                          >
+                            {tag}
                           </span>
-                        </CardDescription>
-                      </CardHeader>
-
-                      <CardContent className="pt-0 relative z-10 flex flex-col flex-grow">
-                        <div className="flex items-center gap-6 mb-4 flex-shrink-0">
-                          <div className="flex items-center text-sm text-gray-700">
-                            <Calendar className="h-4 w-4 mr-2 text-blue-500" />
-                            <span className="font-medium">{pkg.duration}</span>
-                          </div>
-                          <div className="flex items-center text-sm text-gray-700">
-                            <Users className="h-4 w-4 mr-2 text-blue-500" />
-                            <span className="font-medium">
-                              {pkg.categoryName}
-                            </span>
-                          </div>
-                        </div>
-
-                        <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed flex-grow min-h-[4.5rem]">
-                          {pkg.description}
-                        </p>
-
-                        <div className="flex items-center justify-center flex-shrink-0 mt-auto">
-                          <Link href={`/packages/${pkg._id}`}>
-                            <Button className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
-                              Explore Package
-                              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                            </Button>
-                          </Link>
-                        </div>
-                      </CardContent>
+                        ))}
+                      </div>
                     </div>
+
+                    <CardHeader className="pb-3 relative z-10">
+                      <CardTitle className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                        {pkg.name}
+                      </CardTitle>
+                      <CardDescription className="flex items-center text-gray-600 mt-2">
+                        <MapPin className="h-4 w-4 mr-2 text-blue-500" />
+                        {pkg.destination}
+                      </CardDescription>
+                    </CardHeader>
+
+                    <CardContent className="pt-0 relative z-10">
+                      <div className="flex items-center gap-6 mb-4">
+                        <div className="flex items-center text-sm text-gray-700">
+                          <Calendar className="h-4 w-4 mr-2 text-blue-500" />
+                          <span className="font-medium">{pkg.duration}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-700">
+                          <Users className="h-4 w-4 mr-2 text-blue-500" />
+                          <span className="font-medium">
+                            {pkg.categoryName}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-600 mb-6 line-clamp-2 leading-relaxed">
+                        {pkg.description}
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-amber-500">
+                          <Star className="h-5 w-5 fill-current" />
+                          <span className="ml-1 text-sm font-medium">
+                            {pkg.rating || "4.5"}
+                          </span>
+                        </div>
+                        <Link href={`/packages/${pkg._id}`}>
+                          <Button className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
+                            Explore Package
+                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </CardContent>
                   </Card>
                 </motion.div>
               ))}
@@ -657,8 +670,8 @@ export default function HomePage() {
                 <div className="text-sm">Satisfaction</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">1+</div>
-                <div className="text-sm">Year Trust</div>
+                <div className="text-2xl font-bold text-white mb-1">15+</div>
+                <div className="text-sm">Years Trust</div>
               </div>
             </div>
           </motion.div>
