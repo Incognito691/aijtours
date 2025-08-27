@@ -69,21 +69,24 @@ export async function PUT(
 }
 
 // DELETE package by ID
-export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  request: Request,
+  context: { params: { id: string } }
+) {
   try {
-    const { id } = await params
-    const client = await clientPromise
-    const db = client.db("afisales")
+    const { id } = context.params;
+    const client = await clientPromise;
+    const db = client.db("afisales");
 
-    const result = await db.collection("packages").deleteOne({ _id: new ObjectId(id) })
+    const result = await db.collection("packages").deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount === 0) {
-      return NextResponse.json({ error: "Package not found" }, { status: 404 })
+      return NextResponse.json({ error: "Package not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Package deleted successfully" }, { status: 200 })
+    return NextResponse.json({ message: "Package deleted successfully" }, { status: 200 });
   } catch (error) {
-    console.error("Error deleting package:", error)
-    return NextResponse.json({ error: "Failed to delete package" }, { status: 500 })
+    console.error("Error deleting package:", error);
+    return NextResponse.json({ error: "Failed to delete package" }, { status: 500 });
   }
 }
