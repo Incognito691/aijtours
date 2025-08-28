@@ -496,7 +496,7 @@ export default function HomePage() {
               className="text-center mb-20"
             >
               <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                Upcoming Activities
+                UAE Thrill Hub
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Join us for these special occasions and create memories that

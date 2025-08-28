@@ -243,8 +243,8 @@ export default function AdminDashboard() {
           />
           <QuickAction
             icon={<Calendar className="h-6 w-6 mr-3 text-purple-500" />}
-            title="Manage Events"
-            description="Plan and manage special travel events"
+            title="Manage Activities"
+            description="Plan and manage special travel activities"
             primaryHref="/admin/events/new"
             secondaryHref="/admin/events"
             gradient="from-purple-50 via-white to-white dark:from-purple-950 dark:via-gray-900 dark:to-gray-900"

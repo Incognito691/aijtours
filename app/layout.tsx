@@ -14,7 +14,7 @@ const poppins = Lexend({
 
 export const metadata: Metadata = {
   title: {
-    default: "AFI Travel & Tourism – Premium Travel Packages & Destinations",
+    default: "AFI Travel & Tourism – Frame Your Space",
     template: "%s | AFI Travel & Tourism",
   },
   description:

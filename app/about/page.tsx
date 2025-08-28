@@ -425,7 +425,7 @@ export default function AboutPage() {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
                 <img
                   className="w-full h-full object-cover"
-                  src="/images/logo.jpg"
+                  src="/images/about-logo.png"
                   alt="Story"
                 />
               </div>

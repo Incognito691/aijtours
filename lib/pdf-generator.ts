@@ -215,7 +215,7 @@ export async function generateInvoicePDF(booking: BookingData) {
   doc.setFontSize(7)
   doc.setTextColor(200, 200, 200)
   doc.text("Customer Support: +971 564995248  |  Email: sales@afitravelandtourism.com", 20, footerY + 18)
-  doc.text("Website: www.afitravelandtourism.com  |  Dubai, United Arab Emirates", 20, footerY + 23)
+  doc.text("Website: www.afitravelandtourism.com  |  Abu Dhabi", 20, footerY + 23)
   
   doc.setTextColor(160, 160, 160)
   doc.setFontSize(6)
