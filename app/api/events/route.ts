@@ -5,7 +5,7 @@ import type { Event } from "@/lib/models"
 export async function GET(request: NextRequest) {
   try {
     const db = await getDatabase()
-    const events = await db.collection("events").find({}).sort({ date: 1 }).toArray()
+    const events = await db.collection("events").find({}).sort({ createdAt: -1 }).toArray()
 
     // Convert MongoDB _id to string
     const formattedEvents = events.map((event) => ({
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    if (!body.name || !body.description || !body.date || !body.location || !body.price) {
+    if (!body.name || !body.description || !body.location || !body.price) {
       return NextResponse.json({ error: "All required fields must be provided" }, { status: 400 })
     }
 
@@ -33,7 +33,6 @@ export async function POST(request: NextRequest) {
     const eventData: Omit<Event, "_id"> = {
       name: body.name,
       description: body.description,
-      date: new Date(body.date),
       location: body.location,
       price: Number(body.price),
       tags: body.tags || [],

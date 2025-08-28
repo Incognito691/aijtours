@@ -45,8 +45,8 @@ export default function AboutPage() {
     },
     {
       icon: Award,
-      label: "Years of Excellence",
-      value: "15+",
+      label: "Year of Excellence",
+      value: "1",
       color: "from-purple-500 to-indigo-500",
       bgColor: "bg-purple-50",
     },
@@ -93,7 +93,7 @@ export default function AboutPage() {
       description:
         "Creative curator crafting unique experiences that connect travelers with local cultures and hidden gems.",
       specialty: "Cultural Immersion & Custom Itineraries",
-      social: { linkedin: "#", twitter: "#" },
+      social: { linkedin: "", twitter: "" },
     },
   ];
 
@@ -183,6 +183,43 @@ export default function AboutPage() {
           {/* Animated Circles */}
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+
+          {/* Roaming Plane */}
+          <motion.div
+            className="absolute"
+            animate={{
+              x: [0, 300, 600, 300, 0],
+              y: [100, 50, 200, 350, 100],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{ left: "10%", top: "20%" }}
+          >
+            <motion.div
+              animate={{ rotate: [0, 15, -15, 0] }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="relative"
+            >
+              <Plane className="h-12 w-12 text-cyan-400/60" />
+              {/* Plane trail */}
+              <motion.div
+                className="absolute -left-8 top-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent to-cyan-400/40"
+                animate={{ opacity: [0.3, 0.8, 0.3] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            </motion.div>
+          </motion.div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6">
@@ -210,7 +247,7 @@ export default function AboutPage() {
             >
               <span className="text-white">Discover the World with</span>
               <span className="block mt-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
-                AFI Travel
+                AFI Travel and Tourism
               </span>
             </motion.h1>
 
@@ -224,61 +261,45 @@ export default function AboutPage() {
               new horizons. Join us in creating memories that last a lifetime.
             </motion.p>
 
-            {/* Interactive Features Grid */}
+            {/* Floating Travel Elements */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.8 }}
-              className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9, duration: 1 }}
+              className="relative h-32"
             >
+              {/* Floating Travel Words */}
               {[
-                {
-                  icon: Globe,
-                  value: "50+",
-                  label: "Destinations",
-                  color: "from-blue-400 to-cyan-400",
-                },
-                {
-                  icon: Users,
-                  value: "10K+",
-                  label: "Happy Travelers",
-                  color: "from-purple-400 to-pink-400",
-                },
-                {
-                  icon: Award,
-                  value: "15+",
-                  label: "Years Experience",
-                  color: "from-green-400 to-emerald-400",
-                },
-                {
-                  icon: Heart,
-                  value: "99%",
-                  label: "Satisfaction",
-                  color: "from-red-400 to-rose-400",
-                },
-              ].map((feature, index) => (
+                { text: "🌍 Adventure", x: "15%", y: "10%", delay: 0 },
+                { text: "🏛️ Culture", x: "65%", y: "5%", delay: 2 },
+                { text: "🌲 Nature", x: "25%", y: "60%", delay: 4 },
+                { text: "💫 Memories", x: "75%", y: "55%", delay: 6 },
+                { text: "✈️ Journey", x: "45%", y: "25%", delay: 8 },
+              ].map((item, index) => (
                 <motion.div
-                  key={feature.label}
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="relative group"
+                  key={item.text}
+                  className="absolute pointer-events-none"
+                  style={{ left: item.x, top: item.y }}
+                  initial={{ opacity: 0, y: 30, scale: 0.8 }}
+                  animate={{
+                    opacity: [0, 0.9, 0],
+                    y: [30, -10, -50],
+                    scale: [0.8, 1, 0.9],
+                    x: [0, Math.sin(index) * 20, Math.cos(index) * 15],
+                  }}
+                  transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    delay: item.delay,
+                    ease: "easeInOut",
+                  }}
                 >
-                  <div className="relative p-6 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300">
-                    <div
-                      className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.color} mb-4`}
-                    >
-                      <feature.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <div className="text-3xl font-bold text-white mb-1">
-                      {feature.value}
-                    </div>
-                    <div className="text-sm text-blue-100">{feature.label}</div>
-                  </div>
+                  <span className="text-white/80 font-medium text-sm backdrop-blur-sm bg-white/15 px-4 py-2 rounded-full border border-white/30 shadow-lg">
+                    {item.text}
+                  </span>
                 </motion.div>
               ))}
             </motion.div>
-
-            {/* Decorative Elements */}
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"></div>
           </div>
         </div>
       </section>
@@ -407,19 +428,6 @@ export default function AboutPage() {
                   src="/images/logo.jpg"
                   alt="Story"
                 />
-                {/* <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300"></div> */}
-                {/* <button
-                  onClick={toggleVideo}
-                  className="absolute inset-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                >
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 shadow-xl hover:bg-white transition-colors duration-300">
-                    {isVideoPlaying ? (
-                      <Pause className="h-8 w-8 text-gray-900" />
-                    ) : (
-                      <Play className="h-8 w-8 text-gray-900 ml-1" />
-                    )}
-                  </div>
-                </button> */}
               </div>
             </motion.div>
           </div>
@@ -458,7 +466,7 @@ export default function AboutPage() {
                     generations.
                   </p>
                   <div className="mt-6 flex items-center text-blue-600 font-medium group-hover:text-blue-700 transition-colors duration-300">
-                    <span>Inspiring journeys since 2008</span>
+                    <span>Inspiring journeys since 2019</span>
                     <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                   </div>
                 </CardContent>
@@ -778,8 +786,8 @@ export default function AboutPage() {
                 <div className="text-sm">Satisfaction</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">15+</div>
-                <div className="text-sm">Years Trust</div>
+                <div className="text-2xl font-bold text-white mb-1">1</div>
+                <div className="text-sm">Year Trust</div>
               </div>
             </div>
           </motion.div>

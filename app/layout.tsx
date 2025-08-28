@@ -38,6 +38,14 @@ export const metadata: Metadata = {
   ],
   creator: "AFI Travel & Tourism",
   publisher: "AFI Travel & Tourism",
+  icons: {
+    icon: [
+      { url: "/images/logo.jpg", sizes: "32x32", type: "image/jpeg" },
+      { url: "/images/logo.jpg", sizes: "16x16", type: "image/jpeg" },
+    ],
+    apple: [{ url: "/images/logo.jpg", sizes: "180x180", type: "image/jpeg" }],
+    shortcut: "/images/logo.jpg",
+  },
   robots: {
     index: true,
     follow: true,
@@ -57,12 +65,21 @@ export const metadata: Metadata = {
     title: "AFI Travel & Tourism – Premium Travel Packages & Destinations",
     description:
       "Discover amazing travel packages and destinations with AFI Travel & Tourism. Book your dream vacation with our expert travel planning services.",
+    images: [
+      {
+        url: "/images/logo.jpg",
+        width: 1200,
+        height: 630,
+        alt: "AFI Travel & Tourism Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "AFI Travel & Tourism – Premium Travel Packages & Destinations",
     description:
       "Discover amazing travel packages and destinations with AFI Travel & Tourism.",
+    images: ["/images/logo.jpg"],
   },
 
   alternates: {

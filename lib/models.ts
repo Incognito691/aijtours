@@ -35,7 +35,6 @@ export interface Event {
   _id?: ObjectId
   name: string
   description: string
-  date: Date
   location: string
   price: number
   tags: string[]

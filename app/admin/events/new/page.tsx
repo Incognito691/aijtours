@@ -29,7 +29,6 @@ export default function NewEventPage() {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    date: "",
     location: "",
     price: "",
     tags: [] as string[],
@@ -171,17 +170,6 @@ export default function NewEventPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="date">Date & Time *</Label>
-                  <Input
-                    id="date"
-                    name="date"
-                    type="datetime-local"
-                    required
-                    value={formData.date}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
                   <Label htmlFor="price">Price (AED) *</Label>
                   <Input
                     id="price"
@@ -194,19 +182,18 @@ export default function NewEventPage() {
                     placeholder="99.99"
                   />
                 </div>
-              </div>
-
-              <div>
-                <Label htmlFor="location">Location *</Label>
-                <Input
-                  id="location"
-                  name="location"
-                  type="text"
-                  required
-                  value={formData.location}
-                  onChange={handleChange}
-                  placeholder="e.g., New York, USA"
-                />
+                <div>
+                  <Label htmlFor="location">Location *</Label>
+                  <Input
+                    id="location"
+                    name="location"
+                    type="text"
+                    required
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="Dubai Marina"
+                  />
+                </div>
               </div>
 
               <div>
@@ -217,7 +204,7 @@ export default function NewEventPage() {
                   required
                   value={formData.description}
                   onChange={handleChange}
-                  placeholder="Describe the event..."
+                  placeholder="Describe the activity..."
                   rows={4}
                 />
               </div>

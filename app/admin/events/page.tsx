@@ -18,7 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import type { Event } from "@/lib/models";
-import { Plus, Edit, Trash2, ArrowLeft, MapPin, Calendar } from "lucide-react";
+import { Plus, Edit, Trash2, ArrowLeft, MapPin } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -81,8 +81,8 @@ export default function AdminEventsPage() {
       if (response.ok) {
         setEvents(events.filter((event) => event._id?.toString() !== id));
         toast({
-          title: "Event deleted",
-          description: "The event has been successfully deleted.",
+          title: "Activity deleted",
+          description: "The activity has been successfully deleted.",
         });
       } else {
         throw new Error("Failed to delete event");
@@ -91,7 +91,7 @@ export default function AdminEventsPage() {
       console.error("Error deleting event:", error);
       toast({
         title: "Error",
-        description: "Failed to delete event. Please try again.",
+        description: "Failed to delete activity. Please try again.",
         variant: "destructive",
       });
     }
@@ -126,13 +126,13 @@ export default function AdminEventsPage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Admin Dashboard
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900">Events</h1>
-            <p className="text-gray-600">Manage your travel events</p>
+            <h1 className="text-3xl font-bold text-gray-900">Activities</h1>
+            <p className="text-gray-600">Manage your travel activities</p>
           </div>
           <Link href="/admin/events/new">
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Add Event
+              Add Activity
             </Button>
           </Link>
         </div>
@@ -192,10 +192,6 @@ export default function AdminEventsPage() {
                       <span className="flex items-center">
                         <MapPin className="h-4 w-4 mr-1" />
                         {event.location}
-                      </span>
-                      <span className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        {new Date(event.date).toLocaleDateString()}
                       </span>
                     </CardDescription>
                   </CardHeader>

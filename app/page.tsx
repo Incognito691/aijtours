@@ -79,7 +79,7 @@ export default function HomePage() {
       {/* Hero Section with Video */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden rounded-b-[3rem]">
         <div className="absolute inset-0 z-0">
-          <video
+          {/* <video
             autoPlay
             muted
             loop
@@ -87,8 +87,14 @@ export default function HomePage() {
             poster="/placeholder.svg?height=1080&width=1920"
           >
             <source src="/video/landing-cinematic.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
+          </video> */}
+          <Image
+            src="/images/hero-bg.png"
+            alt="Hero Image"
+            layout="fill"
+            objectFit="cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
         </div>
 
         <div className="relative z-10 text-center text-white max-w-5xl mx-auto px-6">
@@ -96,13 +102,13 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className="backdrop-blur-sm bg-white/5 rounded-3xl p-8 border border-white/10"
+            className="p-8"
           >
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight"
             >
               Your Dream Journey
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
@@ -113,7 +119,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-lg md:text-xl lg:text-2xl mb-8 text-white/90 font-light"
+              className="text-xl md:text-2xl lg:text-3xl mb-10 text-white/90 font-light"
             >
               Discover extraordinary destinations with our handcrafted travel
               experiences
@@ -206,21 +212,9 @@ export default function HomePage() {
                       <div className="absolute top-4 right-4">
                         <div className="bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
                           <span className="text-base font-semibold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                            From AED {pkg.price}
+                            AED {pkg.price}
                           </span>
                         </div>
-                      </div>
-
-                      {/* Tags with new design */}
-                      <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                        {pkg.tags?.map((tag: string) => (
-                          <span
-                            key={tag}
-                            className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-gray-700"
-                          >
-                            {tag}
-                          </span>
-                        ))}
                       </div>
                     </div>
 
@@ -253,12 +247,6 @@ export default function HomePage() {
                       </p>
 
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center text-amber-500">
-                          <Star className="h-5 w-5 fill-current" />
-                          <span className="ml-1 text-sm font-medium">
-                            {pkg.rating || "4.5"}
-                          </span>
-                        </div>
                         <Link href={`/packages/${pkg._id}`}>
                           <Button className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
                             Explore Package
@@ -545,16 +533,6 @@ export default function HomePage() {
                           </span>
                         </div>
                       </div>
-
-                      {/* Date tag */}
-                      <div className="absolute bottom-4 left-4">
-                        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 shadow-lg flex items-center">
-                          <Calendar className="h-4 w-4 mr-2 text-blue-400" />
-                          <span className="text-sm font-medium text-white">
-                            {new Date(event.date).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
                     </div>
 
                     <CardHeader className="pb-3">
@@ -670,8 +648,8 @@ export default function HomePage() {
                 <div className="text-sm">Satisfaction</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">15+</div>
-                <div className="text-sm">Years Trust</div>
+                <div className="text-2xl font-bold text-white mb-1">1+</div>
+                <div className="text-sm">Year Trust</div>
               </div>
             </div>
           </motion.div>

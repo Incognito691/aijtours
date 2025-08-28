@@ -254,7 +254,7 @@ export default function PackageDetailPage() {
         type: "package" as const,
       };
 
-      const pdf = generateInvoicePDF(invoiceData);
+      const pdf = await generateInvoicePDF(invoiceData);
       pdf.save(`AFI-Travel-and-Tourism-Invoice-${bookingId}.pdf`);
 
       // 📩 Send confirmation emails (customer + admin) — frontend via EmailJS
@@ -637,7 +637,7 @@ export default function PackageDetailPage() {
                       </Button>
                     </DialogTrigger>
 
-                    <DialogContent className="w-[95vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl rounded-2xl p-0 overflow-hidden">
+                    <DialogContent className="w-[95vw] sm:max-w-xl md:max-w-2xl lg:max-w-4xl rounded-2xl p-0 overflow-hidden">
                       <div className="grid grid-cols-1 md:grid-cols-5">
                         {/* Left: Form */}
                         <div className="md:col-span-3 p-6 md:p-8">
@@ -645,8 +645,8 @@ export default function PackageDetailPage() {
                             <DialogTitle className="text-xl md:text-2xl">
                               Book {packageData.name}
                             </DialogTitle>
-                            <DialogDescription className="mt-2">
-                              Fill in your details to secure your travel
+                            <DialogDescription>
+                              Fill in your details to book this amazing
                               experience
                             </DialogDescription>
                           </DialogHeader>
@@ -782,9 +782,9 @@ export default function PackageDetailPage() {
                                 {bookingData.travelers > 1 ? "s" : ""} ×{" "}
                                 {formatAED(packageData.price)}
                               </p>
-                              <p className="text-xs text-amber-600 dark:text-amber-500 mt-3 italic">
-                                *Final price may vary based on additional
-                                services or changes.
+                              <p className="text-xs text-center text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-3 py-2 rounded-lg border border-amber-200 dark:border-amber-800 mt-4 italic">
+                                ⚠️ Price may differ during final payment
+                                processing.
                               </p>
                             </div>
 
@@ -872,17 +872,6 @@ export default function PackageDetailPage() {
                                 </span>
                               </div>
                             </div>
-                            <div className="flex items-start gap-3 text-sm">
-                              <Check className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                              <div>
-                                <span className="font-medium block mb-1">
-                                  Secure Payment
-                                </span>
-                                <span className="text-slate-600 dark:text-slate-300">
-                                  Your payment information is processed securely
-                                </span>
-                              </div>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -895,11 +884,16 @@ export default function PackageDetailPage() {
                     </p>
                   )}
 
-                  <p className="text-xs text-slate-500 text-center">
-                    By booking, you agree to our terms and conditions. Your
-                    invoice will be automatically downloaded and a confirmation
-                    email will be sent.
-                  </p>
+                  <div className="space-y-2">
+                    <p className="text-xs text-slate-500 text-center">
+                      By booking, you agree to our terms and conditions. Your
+                      invoice will be automatically downloaded and a
+                      confirmation email will be sent.
+                    </p>
+                    <p className="text-xs text-center text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-3 py-2 rounded-lg border border-amber-200 dark:border-amber-800">
+                      ⚠️ Price may differ during final payment processing.
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>

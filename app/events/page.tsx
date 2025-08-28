@@ -12,7 +12,6 @@ import type { Event } from "@/lib/models";
 import {
   Search,
   MapPin,
-  Calendar,
   Sparkles,
   Filter,
   BadgePercent,
@@ -130,12 +129,12 @@ export default function EventsPage() {
                 {
                   number: filteredEvents.length.toString(),
                   label: "Activity",
-                  icon: Calendar,
+                  icon: Sparkles,
                 },
                 {
                   number: "24/7",
                   label: "Support",
-                  icon: Sparkles,
+                  icon: Filter,
                 },
               ].map((s, i) => {
                 const Icon = s.icon;
@@ -290,15 +289,6 @@ export default function EventsPage() {
                       <span className="inline-flex items-center gap-1.5">
                         <MapPin className="h-4 w-4 text-emerald-600" />
                         {event.location}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <Calendar className="h-4 w-4 text-amber-600" />
-                        {new Date(event.date).toLocaleDateString("en-US", {
-                          weekday: "short",
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
                       </span>
                     </div>
 
