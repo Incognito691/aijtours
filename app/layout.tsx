@@ -84,11 +84,12 @@ export const metadata: Metadata = {
     images: ["/images/logo.jpg"],
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    google: "VNDbvNa5B1koUQjyHfLRXwL5ZRqu6UkkGcSy5iIm21o",
   },
   alternates: {
     canonical: "https://www.afitravelandtourism.com",
   },
+  metadataBase: new URL("https://www.afitravelandtourism.com"),
   category: "travel",
 };
 
