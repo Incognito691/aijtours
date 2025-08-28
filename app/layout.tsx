@@ -83,7 +83,9 @@ export const metadata: Metadata = {
       "Discover amazing travel packages and destinations with AFI Travel & Tourism.",
     images: ["/images/logo.jpg"],
   },
-
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
   alternates: {
     canonical: "https://www.afitravelandtourism.com",
   },
@@ -100,6 +102,14 @@ export default function RootLayout({
       <html lang="en">
         <head>
           <StructuredData />
+          {/* Google Search Console Verification */}
+          <meta
+            name="google-site-verification"
+            content={
+              process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+              "PLACEHOLDER_VERIFICATION_CODE"
+            }
+          />
         </head>
         <body className={`${poppins.className}`}>
           {children}
