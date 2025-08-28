@@ -105,10 +105,7 @@ export default function RootLayout({
           {/* Google Search Console Verification */}
           <meta
             name="google-site-verification"
-            content={
-              process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
-              "PLACEHOLDER_VERIFICATION_CODE"
-            }
+            content="VNDbvNa5B1koUQjyHfLRXwL5ZRqu6UkkGcSy5iIm21o"
           />
         </head>
         <body className={`${poppins.className}`}>
