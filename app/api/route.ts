@@ -1,7 +1,7 @@
-// API Routes Index
-// This file helps with API discoverability
+import { NextRequest, NextResponse } from 'next/server'
 
-export const apiRoutes = [
+// API Routes Index
+const apiRoutes = [
   {
     endpoint: '/api/packages',
     method: 'GET',
@@ -28,8 +28,8 @@ export const apiRoutes = [
   }
 ];
 
-export default function handler(req: any, res: any) {
-  res.status(200).json({
+export async function GET(request: NextRequest) {
+  return NextResponse.json({
     message: 'AFI Travel & Tourism API',
     version: '1.0.0',
     routes: apiRoutes.filter(route => route.public)
