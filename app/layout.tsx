@@ -106,7 +106,7 @@ export default function RootLayout({
           <Toaster />
           <Analytics />
           <GoogleAnalytics
-            gaId={process.env.NEXT_PUBLIC_GA_ID || "G-CMR3YBPVY4"}
+            gaId={process.env.NEXT_PUBLIC_GA_ID || "G-4ZBVX829FC"}
           />
         </body>
       </html>
