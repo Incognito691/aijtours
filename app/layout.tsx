@@ -5,6 +5,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/next";
+import StructuredData from "@/components/structured-data";
+import GoogleAnalytics from "@/components/google-analytics";
 
 const poppins = Lexend({
   subsets: ["latin"],
@@ -96,9 +98,16 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <StructuredData />
+        </head>
         <body className={`${poppins.className}`}>
           {children}
           <Toaster />
+          <Analytics />
+          <GoogleAnalytics
+            gaId={process.env.NEXT_PUBLIC_GA_ID || "G-CMR3YBPVY4"}
+          />
         </body>
       </html>
     </ClerkProvider>

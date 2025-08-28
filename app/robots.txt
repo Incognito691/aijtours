@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://www.afitravelandtourism.com/sitemap.xml
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /api/
+
+# Allow important pages
+Allow: /packages/
+Allow: /events/
+Allow: /destinations/
+Allow: /about/
+Allow: /contact/
